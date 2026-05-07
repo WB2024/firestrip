@@ -18,7 +18,7 @@ from ..core.exceptions import (
     FirestripError,
     LauncherSwapError,
 )
-from ..core.launcher import AMAZON_LAUNCHER_PKG, LauncherManager, load_launchers
+from ..core.launcher import AMAZON_LAUNCHER_PKG, LauncherInfo, LauncherManager, load_launchers
 from ..core.packages import PRESETS, ActionResult, PackageManager, PackageTier
 from ..core.settings import DEVICE_SETTINGS, apply_settings, read_current
 from ..core.telemetry import TELEMETRY_SERVICES, read_current_settings, strip_services, strip_settings
@@ -199,11 +199,25 @@ def telemetry_strip(
 
 @launcher_app.command("list")
 def launcher_list() -> None:
-    """List available replacement launchers."""
+    """List known replacement launchers (from built-in catalogue)."""
     for l in load_launchers():
         oss = "FOSS" if l.open_source else "proprietary"
         typer.echo(f"  {l.key:10}  {l.name}  ({l.package})  [{oss}]")
         typer.echo(f"             {l.description}")
+
+
+@launcher_app.command("scan")
+def launcher_scan() -> None:
+    """Query the connected device for all installed HOME-intent handlers."""
+    adb = _require_adb()
+    predefined = {l.package for l in load_launchers()}
+    home_apps = LauncherManager(adb).query_home_activities()
+    if not home_apps:
+        typer.echo("No HOME-intent handlers found (or device unreachable).")
+        return
+    for pkg, component in home_apps:
+        tag = " [in catalogue]" if pkg in predefined else " [custom]"
+        typer.echo(f"  {component}{tag}")
 
 
 @launcher_app.command("status")
@@ -217,16 +231,38 @@ def launcher_status() -> None:
 
 @launcher_app.command("set")
 def launcher_set(
-    key: str = typer.Argument(..., help="Launcher key (e.g. wolf)"),
+    key: str = typer.Argument(..., help="Launcher key (e.g. wolf) or package name"),
     apk: Optional[Path] = typer.Option(None, "--apk", help="Local APK path"),
     apply: bool = typer.Option(False, "--apply"),
 ) -> None:
-    """Set a replacement launcher."""
+    """Set a replacement launcher by key, or by package name if already on device."""
     adb = _require_adb()
+    # Try catalogue first
     matches = [l for l in load_launchers() if l.key == key]
     if not matches:
-        typer.echo(f"Unknown launcher key: {key}", err=True)
-        raise typer.Exit(1)
+        # Fall back: treat key as a package name and look it up on device
+        home_apps = LauncherManager(adb).query_home_activities()
+        pkg_map = {pkg: comp for pkg, comp in home_apps}
+        if key in pkg_map:
+            label = key.rsplit(".", 1)[-1]
+            matches = [LauncherInfo(
+                key=key,
+                name=label,
+                package=key,
+                main_activity=pkg_map[key],
+                description=key,
+                source_url="",
+                open_source=False,
+                is_custom=True,
+            )]
+        else:
+            typer.echo(
+                f"Unknown launcher key or package: {key}\n"
+                "Run 'firestrip launcher list' for catalogue keys or "
+                "'firestrip launcher scan' for on-device packages.",
+                err=True,
+            )
+            raise typer.Exit(1)
     lm = LauncherManager(adb)
     try:
         results = lm.swap(matches[0], apk_path=apk, dry_run=not apply)
@@ -355,4 +391,25 @@ def apk_install(
         typer.echo(f"✓ installed {apk_path.name}")
     except Exception as exc:
         typer.echo(f"✗ installation failed: {exc}", err=True)
+        raise typer.Exit(1)
+
+
+@apk_app.command("uninstall")
+def apk_uninstall(
+    package: str = typer.Argument(..., help="Package name, e.g. com.example.app"),
+    keep_data: bool = typer.Option(True, "--keep-data/--remove-data",
+                                   help="Keep app data and cache after uninstall (default: yes)"),
+) -> None:
+    """Uninstall a package from the connected Fire TV device."""
+    adb = _require_adb()
+    typer.echo(f"Uninstalling {package} …")
+    try:
+        ok = adb.pm_uninstall(package, keep_data=keep_data)
+        if ok:
+            typer.echo(f"✓ uninstalled {package}")
+        else:
+            typer.echo(f"✗ uninstall failed (package may not be installed or is a system app)", err=True)
+            raise typer.Exit(1)
+    except Exception as exc:
+        typer.echo(f"✗ uninstall failed: {exc}", err=True)
         raise typer.Exit(1)

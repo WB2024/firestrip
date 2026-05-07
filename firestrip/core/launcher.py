@@ -23,6 +23,7 @@ class LauncherInfo:
     description: str
     source_url: str
     open_source: bool
+    is_custom: bool = False  # True for device-detected launchers not defined in launchers.toml
 
 
 def load_launchers() -> list[LauncherInfo]:
@@ -62,6 +63,30 @@ class LauncherManager:
         except ADBError:
             return []
         return [l.package for l in self.get_available() if l.package in installed]
+
+    def query_home_activities(self) -> list[tuple[str, str]]:
+        """Return (package, full_component) for every HOME-intent handler on the device.
+
+        Runs ``cmd package query-activities --brief -a android.intent.action.MAIN
+        -c android.intent.category.HOME`` and parses the brief component lines.
+        Returns an empty list if ADB is unavailable or the command fails.
+        """
+        try:
+            out = self._adb.shell(
+                "cmd package query-activities --brief "
+                "-a android.intent.action.MAIN -c android.intent.category.HOME"
+            )
+        except ADBError:
+            return []
+        results: list[tuple[str, str]] = []
+        for line in out.splitlines():
+            line = line.strip()
+            # Brief output lines look like: "com.example.pkg/.MainActivity"
+            if "/" in line and not line.startswith(("#", "-", "(", " ")):
+                pkg = line.split("/", 1)[0]
+                if pkg:  # skip malformed lines
+                    results.append((pkg, line))
+        return results
 
     def get_current_default(self) -> str:
         try:

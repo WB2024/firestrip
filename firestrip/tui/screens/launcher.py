@@ -19,9 +19,9 @@ class LauncherScreen(FirestripScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(id="content"):
-            yield Label("Available launchers (select one):")
+            yield Label("Available launchers — select one (scanning device…):", id="lbl-title")
             yield ListView(id="launcher-list")
-            yield Label("APK path (required if launcher not installed):")
+            yield Label("APK path (only needed if launcher is not installed):")
             yield Input(placeholder="/path/to/launcher.apk", id="apk-input")
             yield Label("Current default: …", id="current-default")
             yield Button("Apply Selected", id="btn-apply", variant="error")
@@ -29,14 +29,57 @@ class LauncherScreen(FirestripScreen):
         yield Footer()
 
     def on_mount(self) -> None:
-        self._launchers = load_launchers()
+        self._predefined_pkgs: set[str] = set()
+        self._launchers: list[LauncherInfo] = []
+        for l in load_launchers():
+            self._launchers.append(l)
+            self._predefined_pkgs.add(l.package)
         self._selected_idx: int | None = None
+        self._rebuild_list()
+        self.refresh_default()
+        self._load_device_launchers()
+
+    def _rebuild_list(self) -> None:
         view = self.query_one("#launcher-list", ListView)
         view.clear()
         for l in self._launchers:
-            oss = " [FOSS]" if l.open_source else ""
-            view.append(ListItem(Label(f"{l.name}{oss}\n  {l.description}")))
-        self.refresh_default()
+            if l.is_custom:
+                tag = " [on device]"
+            elif l.open_source:
+                tag = " [FOSS]"
+            else:
+                tag = ""
+            view.append(ListItem(Label(f"{l.name}{tag}\n  {l.description}")))
+
+    @work(thread=True)
+    def _load_device_launchers(self) -> None:
+        """Query the device for all HOME-intent handlers and add any not in TOML."""
+        if self.adb is None:
+            return
+        home_apps = LauncherManager(self.adb).query_home_activities()
+        extras: list[LauncherInfo] = []
+        for pkg, component in home_apps:
+            if pkg not in self._predefined_pkgs:
+                label = pkg.rsplit(".", 1)[-1]
+                extras.append(LauncherInfo(
+                    key=pkg,
+                    name=label,
+                    package=pkg,
+                    main_activity=component,
+                    description=pkg,
+                    source_url="",
+                    open_source=False,
+                    is_custom=True,
+                ))
+        self.app.call_from_thread(self._merge_launchers, extras)
+
+    def _merge_launchers(self, extras: list[LauncherInfo]) -> None:
+        self._launchers.extend(extras)
+        total = len(self._launchers)
+        self.query_one("#lbl-title", Label).update(
+            f"Available launchers — select one ({total} found):"
+        )
+        self._rebuild_list()
 
     @work(thread=True)
     def refresh_default(self) -> None:
@@ -66,15 +109,17 @@ class LauncherScreen(FirestripScreen):
         launcher = self._launchers[self._selected_idx]
         apk_text = self.query_one("#apk-input", Input).value.strip()
         apk = Path(apk_text) if apk_text else None
+        steps = (
+            [f"Use installed {launcher.package}"]
+            if launcher.is_custom or apk is None
+            else [f"Install {launcher.package} from {apk.name}"]
+        ) + [
+            "Set as default HOME",
+            "Verify HOME handler",
+            "Freeze Amazon launcher",
+        ]
         self.app.push_screen(
-            ConfirmModal(
-                f"Swap to {launcher.name}?",
-                [f"Install {launcher.package}" if apk else f"Use installed {launcher.package}",
-                 "Set as default HOME",
-                 "Verify HOME handler",
-                 "Freeze Amazon launcher"],
-                "Swap",
-            ),
+            ConfirmModal(f"Swap to {launcher.name}?", steps, "Swap"),
             lambda confirmed: self._on_confirm(launcher, apk, confirmed),
         )
 
@@ -122,3 +167,4 @@ class LauncherScreen(FirestripScreen):
             "Amazon launcher restored" if ok else "Restoration may need manual confirmation",
         )
         self.app.call_from_thread(self.refresh_default)
+
