@@ -23,6 +23,20 @@ MODEL_MAP: dict[str, tuple[str, str]] = {
 FIREOS_VERSION_RE = re.compile(r"(\d+\.\d+\.\d+\.\d+)")
 
 
+def _extract_fireos_version(description: str) -> str:
+    """Extract FireOS version from ro.build.description.
+
+    Handles both dotted-numeric (e.g. 8.3.1.2) and PS-code style (e.g. PS7712.5370N).
+    The build ID is always the 3rd whitespace-separated token.
+    """
+    parts = description.split()
+    if len(parts) >= 3:
+        return parts[2]
+    # Fallback: try dotted-numeric regex
+    match = FIREOS_VERSION_RE.search(description)
+    return match.group(1) if match else "unknown"
+
+
 @dataclass
 class FireTVDevice:
     serial: str
@@ -40,7 +54,7 @@ def detect_device(adb: ADBClient) -> FireTVDevice:
     serial = adb.get_prop("ro.serialno").strip()
 
     match = FIREOS_VERSION_RE.search(description)
-    fireos_version = match.group(1) if match else "unknown"
+    fireos_version = _extract_fireos_version(description)
 
     try:
         if model not in MODEL_MAP:

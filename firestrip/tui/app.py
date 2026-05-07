@@ -8,7 +8,7 @@ from ..core.adb import ADBClient
 from ..core.backup import BackupManager
 from ..core.config import Config, load_config
 from ..core.device import FireTVDevice, detect_device
-from ..core.exceptions import ADBBinaryNotFoundError, ADBConnectionError
+from ..core.exceptions import ADBBinaryNotFoundError, ADBConnectionError, ADBTimeoutError
 
 
 class FirestripApp(App):
@@ -57,7 +57,7 @@ class FirestripApp(App):
         try:
             self.adb_client.connect()
             self.device = detect_device(self.adb_client)
-        except (ADBConnectionError, ADBBinaryNotFoundError) as exc:
+        except (ADBConnectionError, ADBBinaryNotFoundError, ADBTimeoutError) as exc:
             self.call_from_thread(self.notify, f"Connection error: {exc}", severity="error")
             return
         self.call_from_thread(self._refresh_home)

@@ -52,7 +52,18 @@ class ADBClient:
         return self._connect_usb()
 
     def _connect_tcp(self) -> bool:
-        cmd = ["adb", "connect", f"{self._host}:{self._port}"]
+        target = f"{self._host}:{self._port}"
+        # Fast path: already listed as connected by a running adb server
+        try:
+            check = subprocess.run(
+                ["adb", "devices"], capture_output=True, text=True, timeout=5
+            )
+            if target in (check.stdout or ""):
+                return True
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+        cmd = ["adb", "connect", target]
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
         except FileNotFoundError as exc:

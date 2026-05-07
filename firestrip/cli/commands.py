@@ -13,6 +13,7 @@ from ..core.device import detect_device
 from ..core.exceptions import (
     ADBBinaryNotFoundError,
     ADBConnectionError,
+    ADBTimeoutError,
     BackupError,
     FirestripError,
     LauncherSwapError,
@@ -72,7 +73,7 @@ def main_callback(
     state.backup = BackupManager()
     try:
         state.adb.connect()
-    except (ADBConnectionError, ADBBinaryNotFoundError) as e:
+    except (ADBConnectionError, ADBBinaryNotFoundError, ADBTimeoutError) as e:
         typer.echo(f"Error: {e}", err=True)
         raise typer.Exit(1)
 
