@@ -1,0 +1,89 @@
+# ── Project-specific ──────────────────────────────────────────────────────────
+DESIGN.md
+thu_may_*.md
+
+# User backups and state
+~/.local/share/firestrip/
+~/.config/firestrip/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# pipx
+.pipx/
+
+# ── Build tools ───────────────────────────────────────────────────────────────
+# Hatch
+.hatch/
+
+# PyInstaller / AppImage artifacts
+*.spec
+*.AppImage
+*.appimage
+appimage-build/
+
+# Briefcase
+linux/
+macOS/
+windows/
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+junit*.xml
+
+# ── Type checkers ─────────────────────────────────────────────────────────────
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+# ── Editors & IDEs ────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Secrets & local config ────────────────────────────────────────────────────
+.env
+.env.local
+secrets.toml
+*.pem
+*.key
+
+# ── ADB / Android ─────────────────────────────────────────────────────────────
+# Local APK files dropped in for sideloading
+*.apk
+
+# adb keys (should never be committed)
+adbkey
+adbkey.pub
