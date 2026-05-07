@@ -16,6 +16,7 @@ class FirestripApp(App):
     CSS_PATH = "app.tcss"
     BINDINGS = [
         Binding("q", "quit", "Quit"),
+        Binding("6", "push_screen('install')", "Install APK"),
     ]
 
     adb_client: ADBClient | None
@@ -34,6 +35,7 @@ class FirestripApp(App):
         from .screens.backup import BackupScreen
         from .screens.debloat import DebloatScreen
         from .screens.home import HomeScreen
+        from .screens.install import InstallScreen
         from .screens.launcher import LauncherScreen
         from .screens.settings import SettingsScreen
         from .screens.telemetry import TelemetryScreen
@@ -44,6 +46,7 @@ class FirestripApp(App):
         self.install_screen(LauncherScreen, name="launcher")
         self.install_screen(SettingsScreen, name="settings")
         self.install_screen(BackupScreen, name="backup")
+        self.install_screen(InstallScreen, name="install")
 
         self.push_screen("home")
 

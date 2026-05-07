@@ -3,7 +3,7 @@ import sys
 
 CLI_SUBCOMMANDS = frozenset({
     "debloat", "telemetry", "launcher", "settings",
-    "backup", "restore", "device", "setup-udev",
+    "backup", "restore", "device", "setup-udev", "apk",
 })
 
 

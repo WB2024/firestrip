@@ -35,6 +35,7 @@ launcher_app = typer.Typer(help="Manage Fire TV launcher")
 settings_app = typer.Typer(help="Apply device settings tweaks")
 backup_app = typer.Typer(help="Create a device state backup")
 restore_app = typer.Typer(help="Restore from a backup file")
+apk_app = typer.Typer(help="Install APK files onto the device")
 
 app.add_typer(debloat_app, name="debloat")
 app.add_typer(telemetry_app, name="telemetry")
@@ -42,6 +43,7 @@ app.add_typer(launcher_app, name="launcher")
 app.add_typer(settings_app, name="settings")
 app.add_typer(backup_app, name="backup")
 app.add_typer(restore_app, name="restore")
+app.add_typer(apk_app, name="apk")
 
 
 @dataclass
@@ -332,3 +334,25 @@ def restore_run(
     if launcher and apply:
         ok = bm.restore_launcher(adb, input_path)
         typer.echo("✓ launcher restored" if ok else "✗ launcher restoration unclear")
+
+
+# ── apk install ──────────────────────────────────────────────────────────────
+
+@apk_app.command("install")
+def apk_install(
+    apk_path: Path = typer.Argument(..., help="Path to the local APK file"),
+) -> None:
+    """Install an APK file onto the connected Fire TV device."""
+    adb = _require_adb()
+    if not apk_path.exists():
+        typer.echo(f"Error: file not found: {apk_path}", err=True)
+        raise typer.Exit(1)
+    if apk_path.suffix.lower() != ".apk":
+        typer.echo(f"Warning: {apk_path.name} does not have an .apk extension", err=True)
+    typer.echo(f"Installing {apk_path.name} …")
+    try:
+        adb.install(apk_path)
+        typer.echo(f"✓ installed {apk_path.name}")
+    except Exception as exc:
+        typer.echo(f"✗ installation failed: {exc}", err=True)
+        raise typer.Exit(1)

@@ -14,6 +14,7 @@ class HomeScreen(FirestripScreen):
         ("3", "app.push_screen('launcher')", "Launcher"),
         ("4", "app.push_screen('settings')", "Settings"),
         ("5", "app.push_screen('backup')", "Backup"),
+        ("6", "app.push_screen('install')", "Install APK"),
     ]
 
     def compose(self) -> ComposeResult:
@@ -28,6 +29,7 @@ class HomeScreen(FirestripScreen):
             yield Button("Safe Debloat", id="btn-debloat", variant="primary")
             yield Button("Strip Telemetry", id="btn-telemetry", variant="primary")
             yield Button("Manage Launcher", id="btn-launcher", variant="primary")
+            yield Button("Install APK", id="btn-install", variant="default")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -70,3 +72,5 @@ class HomeScreen(FirestripScreen):
                 self.app.push_screen("telemetry")
             case "btn-launcher":
                 self.app.push_screen("launcher")
+            case "btn-install":
+                self.app.push_screen("install")
