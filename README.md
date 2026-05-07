@@ -144,15 +144,15 @@ firestrip --usb telemetry strip
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  firestrip  v0.1.0                  Device: Fire TV Stick 4K    │
-│  Connected: 192.168.1.42:5555 ✓     Android 9 / FireOS 7.x     │
+│  firestrip  v0.1.0                  Device: Fire TV Box (4K)    │
+│  Connected: 192.168.1.138:5555 ✓    Android 9 / PS7712.5370N   │
 ├──────────────────┬──────────────────────────────────────────────┤
 │                  │                                              │
 │  [1] Debloat     │  Installed Bloat Packages  (34 found)        │
 │  [2] Telemetry   │  ┌──────────────────────────────────────┐   │
-│  [3] Launcher    │  │ [x] com.amazon.avod          SAFE    │   │
-│  [4] Settings    │  │ [x] com.audible.application  SAFE    │   │
-│  [5] Backup      │  │ [x] com.amazon.bueller       SAFE    │   │
+│  [3] Launcher    │  │ [x] com.amazon.venezia       SAFE    │   │
+│  [4] Settings    │  │ [x] com.amazon.bueller.music SAFE    │   │
+│  [5] Backup      │  │ [x] com.amazon.cloud9        SAFE    │   │
 │  [6] Restore     │  │ [ ] com.amazon.venezia       RISKY   │   │
 │  [q] Quit        │  │ [x] com.amazon.device.metrics  TEL.  │   │
 │                  │  └──────────────────────────────────────┘   │
@@ -194,16 +194,21 @@ The launcher swap workflow installs the new launcher first, sets it as the defau
 
 ## Supported Devices
 
-| Device | Status |
-|---|---|
-| Fire TV Stick (3rd Gen) | ✅ Tested |
-| Fire TV Stick 4K | ✅ Tested |
-| Fire TV Stick 4K Max | ✅ Tested |
-| Fire TV Stick Lite | ✅ Tested |
-| Fire TV Cube (1st/2nd Gen) | ⚠️ Community tested |
-| Fire TV (pendant/box) | ⚠️ Community tested |
+| Device | Model Code | Status |
+|---|---|---|
+| **Fire TV Box (4K)** | `AFTBOXE1` | ✅ **Primary reference device — fully tested** |
+| Fire TV Stick (3rd Gen) | `AFTE` | ⚠️ Community tested |
+| Fire TV Stick 4K | `AFTMM` | ⚠️ Community tested |
+| Fire TV Stick 4K Max | `AFTKA` | ⚠️ Community tested |
+| Fire TV Stick Lite | `AFTS` | ⚠️ Community tested |
+| Fire TV Cube (1st Gen) | `AFTR` | ⚠️ Community tested |
+| Fire TV Cube (2nd Gen) | `AFTRS` | ⚠️ Community tested |
 
-Device fingerprinting loads the correct package list per model. Package names and safe/risky classification differ between FireOS versions.
+> The **Fire TV Box (`AFTBOXE1`, codename `juliana`)** running FireOS `PS7712.5370N` (Android 9, SDK 28, MediaTek m7632) is the primary development and test device. All package lists, telemetry constants, and fixture data are sourced from this real hardware. If you have this exact model, firestrip works out of the box.
+
+> **Fire TV Box users:** firestrip never touches the integrated live TV tuner packages (`com.amazon.tv.channelscan`, `com.amazon.tv.livetv`, `com.amazon.tv.conditionalaccess`, `com.mediatek.tvinput`). These are in the protected `NEVER_TOUCH` list.
+
+Device fingerprinting loads the correct package list per model. Package names and safe/risky classification differ between FireOS versions. Unknown models fall back to the common package list with a warning.
 
 ---
 
