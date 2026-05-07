@@ -60,7 +60,7 @@ Existing tools are either Windows-only, macOS-only, outdated shell scripts, or d
 ### From source (current recommended method)
 
 ```bash
-git clone https://github.com/yourusername/firestrip.git
+git clone https://github.com/WB2024/firestrip.git
 cd firestrip
 python -m venv .venv
 source .venv/bin/activate
