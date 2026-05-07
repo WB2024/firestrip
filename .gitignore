@@ -87,3 +87,5 @@ secrets.toml
 # adb keys (should never be committed)
 adbkey
 adbkey.pub
+Commands.txt
+ADB_INFO.md
