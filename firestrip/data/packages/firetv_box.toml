@@ -1,0 +1,174 @@
+# firestrip/data/packages/firetv_box.toml
+# Fire TV Box (AFTBOXE1, codename: juliana, MediaTek m7632)
+# Verified against PS7712.5370N / Android 9 / SDK 28
+#
+# NEVER REMOVE: com.amazon.tv.channelscan, com.amazon.tv.conditionalaccess,
+# com.amazon.tv.livetv, com.mediatek.tvinput.* (live TV tuner).
+
+# ── Safe removals unique to the Box ──────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.bueller.music"
+tier        = "safe"
+description = "Alexa Music skill (Box-specific name)"
+
+[[packages]]
+name        = "com.amazon.bueller.photos"
+tier        = "safe"
+description = "Alexa Photos skill (Box-specific name)"
+
+[[packages]]
+name        = "com.audible.application.firetv"
+tier        = "safe"
+description = "Audible (Fire TV variant on Box)"
+
+[[packages]]
+name        = "com.amazon.dummy.music"
+tier        = "safe"
+description = "Dummy Music stub"
+
+[[packages]]
+name        = "com.amazon.dummy.alarmclock"
+tier        = "safe"
+description = "Dummy Alarm Clock stub"
+
+[[packages]]
+name        = "com.amazon.dummy.calendar"
+tier        = "safe"
+description = "Dummy Calendar stub"
+
+[[packages]]
+name        = "com.amazon.dummy.contacts"
+tier        = "safe"
+description = "Dummy Contacts stub"
+
+[[packages]]
+name        = "com.amazon.dummy.gallery"
+tier        = "safe"
+description = "Dummy Gallery stub"
+
+[[packages]]
+name        = "com.amazon.storm.lightning.tutorial"
+tier        = "safe"
+description = "Fire TV setup/tutorial app"
+
+[[packages]]
+name        = "com.amazon.tmm.tutorial"
+tier        = "safe"
+description = "TMM onboarding tutorial"
+
+[[packages]]
+name        = "com.amazon.tv.oobe"
+tier        = "safe"
+description = "Out-Of-Box Experience setup wizard"
+
+[[packages]]
+name        = "com.amazon.tv.ooberesource"
+tier        = "safe"
+description = "OOBE resource package"
+
+[[packages]]
+name        = "com.amazon.tv.releasenotes"
+tier        = "safe"
+description = "Release notes / changelog viewer"
+
+[[packages]]
+name        = "com.amazon.tv.democontent.provider"
+tier        = "safe"
+description = "Demo content provider"
+
+[[packages]]
+name        = "com.amazon.ftv.screensaver"
+tier        = "risky"
+description = "Fire TV screensaver — ⚠ may break Amazon UI"
+
+[[packages]]
+name        = "com.amazon.tv.localgallery"
+tier        = "safe"
+description = "Local photo gallery viewer"
+
+[[packages]]
+name        = "com.amazon.kindleautomatictimezone"
+tier        = "safe"
+description = "Kindle automatic timezone sync"
+
+[[packages]]
+name        = "com.amazon.ods.kindleconnect"
+tier        = "safe"
+description = "Kindle device connect bridge"
+
+[[packages]]
+name        = "com.amazon.tv.easyupgrade"
+tier        = "safe"
+description = "Easy Upgrade migration assistant"
+
+[[packages]]
+name        = "com.amazon.gamehub"
+tier        = "safe"
+description = "Amazon Game Hub launcher overlay"
+
+[[packages]]
+name        = "com.amazon.recess"
+tier        = "safe"
+description = "Amazon Recess (casual games hub)"
+
+[[packages]]
+name        = "com.amazon.minitv.android.app"
+tier        = "safe"
+description = "Amazon miniTV (India-specific)"
+
+# ── Risky removals unique to the Box ─────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.venezia"
+tier        = "risky"
+description = "Amazon Appstore"
+
+[[packages]]
+name        = "com.amazon.tv.forcedotaupdater.v2"
+tier        = "risky"
+description = "Force OTA updater v2"
+
+[[packages]]
+name        = "com.amazon.device.software.ota"
+tier        = "risky"
+description = "OTA update service"
+
+[[packages]]
+name        = "com.amazon.device.software.ota.override"
+tier        = "risky"
+description = "OTA override service"
+
+[[packages]]
+name        = "com.amazon.tv.matter"
+tier        = "risky"
+description = "Matter smart home integration"
+
+[[packages]]
+name        = "com.amazon.tv.mattercohost"
+tier        = "risky"
+description = "Matter co-host service"
+
+# ── Telemetry unique to the Box ──────────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.tv.ottssocompanionapp"
+tier        = "telemetry"
+description = "OTT SSO companion — tracks streaming sign-in activity"
+
+[[packages]]
+name        = "com.amazon.perfcollection"
+tier        = "telemetry"
+description = "Performance data collection service"
+
+[[packages]]
+name        = "com.amazon.perfc"
+tier        = "telemetry"
+description = "Performance counter/profiling service"
+
+[[packages]]
+name        = "com.amazon.tv.developer.dataservice"
+tier        = "telemetry"
+description = "Developer analytics data service"
+
+[[packages]]
+name        = "com.fireos.usagestats.proxy"
+tier        = "telemetry"
+description = "FireOS usage statistics proxy service"

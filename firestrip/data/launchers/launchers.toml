@@ -1,0 +1,28 @@
+# firestrip/data/launchers/launchers.toml
+
+[[launchers]]
+key           = "wolf"
+name          = "Wolf Launcher"
+package       = "eu.wolfgangstudios.launcher"
+main_activity = ".MainActivity"
+description   = "Polished, ad-free launcher with TMDB metadata."
+source_url    = ""
+open_source   = false
+
+[[launchers]]
+key           = "flauncher"
+name          = "FLauncher"
+package       = "me.efesser.flauncher"
+main_activity = ".MainActivity"
+description   = "Open source, minimal, keyboard- and remote-friendly. FOSS."
+source_url    = "https://github.com/CedricFinance/flauncher"
+open_source   = true
+
+[[launchers]]
+key           = "sideload"
+name          = "Sideload Launcher"
+package       = "com.riverrock.sideload"
+main_activity = ".MainActivity"
+description   = "Lightweight launcher that surfaces all sideloaded apps."
+source_url    = ""
+open_source   = false

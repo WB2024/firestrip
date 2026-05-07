@@ -1,0 +1,800 @@
+# firestrip/data/packages/common.toml
+# Packages present across all or most Fire TV devices.
+# Device-specific files may override tier for any of these.
+
+# ── Safe: Amazon media/content apps ─────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.avod"
+tier        = "safe"
+description = "Amazon Prime Video"
+
+[[packages]]
+name        = "com.audible.application"
+tier        = "safe"
+description = "Audible audiobook app (older package name)"
+
+[[packages]]
+name        = "com.amazon.musicplayer"
+tier        = "safe"
+description = "Amazon Music"
+
+[[packages]]
+name        = "com.amazon.photos"
+tier        = "safe"
+description = "Amazon Photos cloud backup"
+
+[[packages]]
+name        = "com.amazon.kindle"
+tier        = "safe"
+description = "Kindle e-reader"
+
+[[packages]]
+name        = "com.amazon.cloud9"
+tier        = "safe"
+description = "Amazon Silk Browser"
+
+[[packages]]
+name        = "com.amazon.amazonvideo.livingroom"
+tier        = "safe"
+description = "Amazon Video (living room / older package name)"
+
+[[packages]]
+name        = "com.amazon.avod.thirdpartyclient"
+tier        = "safe"
+description = "Amazon Prime Video third-party client framework"
+
+# ── Safe: Alexa / voice services ────────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.bueller"
+tier        = "safe"
+description = "Alexa voice assistant base package (older FireOS)"
+
+[[packages]]
+name        = "com.amazon.vizzini"
+tier        = "safe"
+description = "Amazon Alexa Media Player / voice support service"
+
+[[packages]]
+name        = "com.amazon.aca"
+tier        = "safe"
+description = "ACAFireTVAndroidClient — Alexa companion app client"
+
+[[packages]]
+name        = "com.amazon.aria"
+tier        = "safe"
+description = "Aria AriaRuntime — Alexa runtime layer"
+
+[[packages]]
+name        = "com.amazon.avl.ftv"
+tier        = "safe"
+description = "Alexa Voice Layer for Fire TV"
+
+[[packages]]
+name        = "com.amazon.tv.alexaalerts"
+tier        = "safe"
+description = "Fire TV Alexa Alerts notification handler"
+
+[[packages]]
+name        = "com.amazon.ale"
+tier        = "safe"
+description = "Amazon ALE (Alexa Language Engine) service"
+
+[[packages]]
+name        = "com.amazon.alexashopping"
+tier        = "safe"
+description = "Alexa Shopping integration"
+
+# ── Safe: bloat / pre-installed ─────────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.recess"
+tier        = "safe"
+description = "Amazon Recess casual games hub"
+
+[[packages]]
+name        = "com.amazon.tv.trueidentity"
+tier        = "safe"
+description = "Amazon profile/identity service overlay"
+
+[[packages]]
+name        = "com.amazon.storm.loyalty"
+tier        = "safe"
+description = "Amazon loyalty/rewards promotions app"
+
+[[packages]]
+name        = "com.amazon.hedwig"
+tier        = "safe"
+description = "Amazon News app"
+
+[[packages]]
+name        = "com.amazon.tahoe"
+tier        = "safe"
+description = "Amazon FreeTime (kids mode)"
+
+[[packages]]
+name        = "com.amazon.tv.nimh"
+tier        = "safe"
+description = "Amazon 'Not In My House' parental restrictions"
+
+[[packages]]
+name        = "com.amazon.parentalcontrols"
+tier        = "safe"
+description = "Amazon parental controls (older package)"
+
+[[packages]]
+name        = "com.amazon.tv.parentalcontrols"
+tier        = "safe"
+description = "Amazon TV parental controls"
+
+[[packages]]
+name        = "com.amazon.tv.support"
+tier        = "safe"
+description = "Amazon TV support app"
+
+[[packages]]
+name        = "com.amazon.tv.legal.notices"
+tier        = "safe"
+description = "Amazon KFTV legal notices"
+
+[[packages]]
+name        = "com.amazon.tv.releasenotes"
+tier        = "safe"
+description = "Release notes viewer"
+
+[[packages]]
+name        = "com.amazon.tv.routing"
+tier        = "safe"
+description = "FTV content routing service"
+
+[[packages]]
+name        = "com.amazon.dcp.mig.speakeasy"
+tier        = "safe"
+description = "Amazon device migration service"
+
+[[packages]]
+name        = "com.amazon.kor.demo"
+tier        = "safe"
+description = "Korean region demo content"
+
+[[packages]]
+name        = "com.amazon.naatyam"
+tier        = "safe"
+description = "Naatyam (Indian content stub)"
+
+[[packages]]
+name        = "com.amazon.minitv.android.app"
+tier        = "safe"
+description = "Amazon miniTV (India-specific)"
+
+[[packages]]
+name        = "com.amazon.ftv.glorialist"
+tier        = "safe"
+description = "Gloria content list service"
+
+[[packages]]
+name        = "com.amazon.gloria.graphiq"
+tier        = "safe"
+description = "Gloria/Graphiq knowledge graph service"
+
+[[packages]]
+name        = "com.amazon.amznfuse.operatorredirection"
+tier        = "safe"
+description = "Amazon operator redirect shim"
+
+[[packages]]
+name        = "com.amznfuse.operatorredirection"
+tier        = "safe"
+description = "Amazon operator redirect shim (alternate name)"
+
+# ── Safe: utility stubs ──────────────────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.acos.providers.UnifiedSettingsProvider"
+tier        = "safe"
+description = "Amazon unified settings content provider"
+
+[[packages]]
+name        = "com.amazon.ags.app"
+tier        = "safe"
+description = "Amazon Game Services app"
+
+[[packages]]
+name        = "com.amazon.android.marketplace"
+tier        = "safe"
+description = "Amazon Underground / Marketplace app"
+
+[[packages]]
+name        = "com.amazon.awvflingreceiver"
+tier        = "safe"
+description = "Amazon WebView fling gesture receiver"
+
+[[packages]]
+name        = "com.amazon.bueller.notification"
+tier        = "safe"
+description = "Alexa notification service"
+
+[[packages]]
+name        = "com.amazon.connectivitydiag"
+tier        = "safe"
+description = "Amazon connectivity diagnostics"
+
+[[packages]]
+name        = "com.amazon.device.crashmanager"
+tier        = "safe"
+description = "Crash reporting manager"
+
+[[packages]]
+name        = "com.amazon.device.messaging"
+tier        = "safe"
+description = "Amazon Device Messaging (ADM) push"
+
+[[packages]]
+name        = "com.amazon.device.messaging.sdk.internal.library"
+tier        = "safe"
+description = "ADM SDK internal library"
+
+[[packages]]
+name        = "com.amazon.device.messaging.sdk.library"
+tier        = "safe"
+description = "ADM SDK library"
+
+[[packages]]
+name        = "com.amazon.device.sync"
+tier        = "safe"
+description = "Amazon device state sync service"
+
+[[packages]]
+name        = "com.amazon.device.sync.sdk.internal"
+tier        = "safe"
+description = "Amazon sync SDK internal"
+
+[[packages]]
+name        = "com.amazon.device.sale.service"
+tier        = "safe"
+description = "Amazon sale notification service"
+
+[[packages]]
+name        = "com.amazon.device.bluetoothdfu"
+tier        = "safe"
+description = "Bluetooth DFU service"
+
+[[packages]]
+name        = "com.amazon.device.logmanager"
+tier        = "safe"
+description = "Amazon device log manager"
+
+[[packages]]
+name        = "com.amazon.platform.fdrw"
+tier        = "safe"
+description = "Factory Data Reset Whitelist Manager"
+
+[[packages]]
+name        = "com.amazon.kindle.cms"
+tier        = "safe"
+description = "Kindle Content Management System"
+
+[[packages]]
+name        = "com.amazon.kindle.devicecontrols"
+tier        = "safe"
+description = "Kindle device controls"
+
+[[packages]]
+name        = "com.amazon.kso.blackbird"
+tier        = "safe"
+description = "Amazon KSO Blackbird (internal)"
+
+[[packages]]
+name        = "com.amazon.precog"
+tier        = "safe"
+description = "Amazon Precog (predictive content loader)"
+
+[[packages]]
+name        = "com.amazon.providers"
+tier        = "safe"
+description = "Amazon content providers"
+
+[[packages]]
+name        = "com.amazon.providers.contentsupport"
+tier        = "safe"
+description = "Amazon content support provider"
+
+[[packages]]
+name        = "com.amazon.securitysyncclient"
+tier        = "safe"
+description = "Amazon security sync client"
+
+[[packages]]
+name        = "com.amazon.sharingservice.android.client.proxy"
+tier        = "safe"
+description = "Amazon sharing service client proxy"
+
+[[packages]]
+name        = "com.amazon.shpm"
+tier        = "safe"
+description = "Amazon SHPM"
+
+[[packages]]
+name        = "com.amazon.sync.provider.ipc"
+tier        = "safe"
+description = "Sync provider IPC"
+
+[[packages]]
+name        = "com.amazon.sync.service"
+tier        = "safe"
+description = "Content Sync Framework"
+
+[[packages]]
+name        = "com.amazon.tz.webcryptotzservice"
+tier        = "safe"
+description = "Web crypto TrustZone service"
+
+[[packages]]
+name        = "com.amazon.videoads.app"
+tier        = "safe"
+description = "Video ads service"
+
+[[packages]]
+name        = "com.amazon.visualonawv"
+tier        = "safe"
+description = "VisualOn AV framework"
+
+[[packages]]
+name        = "com.amazon.webview"
+tier        = "safe"
+description = "Amazon WebView component"
+
+[[packages]]
+name        = "com.amazon.webview.awvdeploymentservice"
+tier        = "safe"
+description = "Amazon WebView deployment service"
+
+[[packages]]
+name        = "com.amazon.wifilocker"
+tier        = "safe"
+description = "Amazon WiFi Locker"
+
+[[packages]]
+name        = "com.amazon.ssdpservice"
+tier        = "safe"
+description = "SSDP discovery for Amazon Echo/Alexa"
+
+[[packages]]
+name        = "com.amazon.alta.h2clientservice"
+tier        = "safe"
+description = "Amazon ALTA H2 client service"
+
+[[packages]]
+name        = "com.amazon.dialservice"
+tier        = "safe"
+description = "DIAL second-screen protocol"
+
+[[packages]]
+name        = "com.amazon.cardinal"
+tier        = "safe"
+description = "Amazon CustomMediaController"
+
+[[packages]]
+name        = "com.amazon.tifobserver"
+tier        = "safe"
+description = "TIFObserverService"
+
+[[packages]]
+name        = "com.amazon.webview.metrics.service"
+tier        = "safe"
+description = "Amazon WebView metrics reporting service"
+
+[[packages]]
+name        = "com.amazon.appaccesskeyprovider"
+tier        = "safe"
+description = "App Access Key Provider stub"
+
+[[packages]]
+name        = "com.amazon.dpcclient"
+tier        = "safe"
+description = "Amazon DPC client"
+
+[[packages]]
+name        = "com.amazon.firebat"
+tier        = "safe"
+description = "Prime Video PVFTV stub"
+
+[[packages]]
+name        = "com.amazon.firerestapiframework"
+tier        = "safe"
+description = "Fire TV REST API framework"
+
+[[packages]]
+name        = "com.amazon.ftv.xpicker"
+tier        = "safe"
+description = "ftv.xpicker stub"
+
+[[packages]]
+name        = "com.amazon.katoch"
+tier        = "safe"
+description = "Amazon Katoch"
+
+[[packages]]
+name        = "com.amazon.ceviche"
+tier        = "safe"
+description = "Amazon Ceviche"
+
+[[packages]]
+name        = "com.amazon.logan"
+tier        = "safe"
+description = "VoiceView accessibility screen reader"
+
+[[packages]]
+name        = "android.amazon.perm"
+tier        = "safe"
+description = "Amazon permissions library"
+
+[[packages]]
+name        = "com.amazon.advertisingidsettings"
+tier        = "safe"
+description = "Amazon advertising ID settings app"
+
+[[packages]]
+name        = "com.amazon.android.service.networkmonitor"
+tier        = "safe"
+description = "BuellerDeviceService network monitor"
+
+[[packages]]
+name        = "com.amazon.franktvinput"
+tier        = "safe"
+description = "Fire TV Recast TV input service"
+
+[[packages]]
+name        = "com.android.providers.downloads"
+tier        = "safe"
+description = "Amazon Download Manager"
+
+[[packages]]
+name        = "com.android.documentsui"
+tier        = "safe"
+description = "Documents UI file picker"
+
+[[packages]]
+name        = "com.android.managedprovisioning"
+tier        = "safe"
+description = "Device Provisioner (MDM)"
+
+[[packages]]
+name        = "com.android.inputmethod.pinyin"
+tier        = "safe"
+description = "Fire Basic Keyboard (Simplified Chinese)"
+
+[[packages]]
+name        = "com.svox.pico"
+tier        = "safe"
+description = "Pico TTS speech synthesis engine"
+
+[[packages]]
+name        = "com.ivona.tts.oem"
+tier        = "safe"
+description = "Ivona TTS OEM speech synthesis"
+
+[[packages]]
+name        = "com.ivona.orchestrator"
+tier        = "safe"
+description = "Ivona TTS orchestrator"
+
+# ── Risky: Appstore and update infrastructure ────────────────────────────────
+[[packages]]
+name        = "com.amazon.venezia"
+tier        = "risky"
+description = "Amazon Appstore — remove only if using alternative app source"
+
+[[packages]]
+name        = "com.amazon.tv.companion"
+tier        = "risky"
+description = "Fire TV Companion app"
+
+[[packages]]
+name        = "com.amazon.dcp"
+tier        = "risky"
+description = "Amazon DCP OTA framework — disabling prevents OTA updates"
+
+[[packages]]
+name        = "com.amazon.dcp.contracts.framework.library"
+tier        = "risky"
+description = "Amazon DCP OTA contracts framework library"
+
+[[packages]]
+name        = "com.amazon.dcp.contracts.library"
+tier        = "risky"
+description = "Amazon DCP OTA contracts library"
+
+[[packages]]
+name        = "com.amazon.device.software.ota"
+tier        = "risky"
+description = "OTA update service — prevents firmware updates"
+
+[[packages]]
+name        = "com.amazon.device.software.ota.override"
+tier        = "risky"
+description = "OTA update override service"
+
+[[packages]]
+name        = "com.amazon.settings.systemupdates"
+tier        = "risky"
+description = "OTA system updates settings page"
+
+[[packages]]
+name        = "com.amazon.device.software.ota.handler.OtaTaskHandler"
+tier        = "risky"
+description = "OTA task handler service"
+
+[[packages]]
+name        = "com.amazon.tv.forcedotaupdater"
+tier        = "risky"
+description = "Forced OTA updater (older FireOS name)"
+
+# ── Risky: Settings/UI dependencies ──────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.client.metrics"
+tier        = "risky"
+description = "Amazon client-side metrics collector — ⚠ SETTINGS-UI on FireOS 5.2.6.3"
+
+[[packages]]
+name        = "com.amazon.client.metrics.api"
+tier        = "risky"
+description = "Amazon client metrics API — ⚠ SETTINGS-UI on FireOS 5.2.6.3"
+
+[[packages]]
+name        = "com.amazon.metrics.api"
+tier        = "risky"
+description = "Amazon metrics API 2.0"
+
+[[packages]]
+name        = "com.amazon.imp"
+tier        = "risky"
+description = "Amazon IMP — ⚠ breaks Apps list and account sign-in"
+
+[[packages]]
+name        = "com.amazon.communication.discovery"
+tier        = "risky"
+description = "Amazon communication discovery — ⚠ Vizzini errors"
+
+[[packages]]
+name        = "com.amazon.identity.auth.device.authorization"
+tier        = "risky"
+description = "Amazon account auth library — ⚠ LOGIN-BREAK"
+
+[[packages]]
+name        = "com.amazon.device.controllermanager"
+tier        = "risky"
+description = "Amazon controller manager — ⚠ may break Settings"
+
+[[packages]]
+name        = "com.amazon.device.lowstoragemanager"
+tier        = "risky"
+description = "Low storage manager — ⚠ may break Settings"
+
+[[packages]]
+name        = "com.amazon.fireinputdevices"
+tier        = "risky"
+description = "Fire input devices — ⚠ may break Settings"
+
+[[packages]]
+name        = "com.amazon.tv.ime"
+tier        = "risky"
+description = "Fire TV IME — ⚠ may break Settings"
+
+[[packages]]
+name        = "com.amazon.tv.intentsupport"
+tier        = "risky"
+description = "Fire TV intent support — ⚠ may break Settings"
+
+[[packages]]
+name        = "com.amazon.tv.resolutioncycler"
+tier        = "risky"
+description = "Fire TV resolution cycler — ⚠ may break display Settings"
+
+[[packages]]
+name        = "com.amazon.unifiedshare.actionchooser"
+tier        = "risky"
+description = "Amazon unified share action chooser — ⚠ may break Settings"
+
+[[packages]]
+name        = "com.amazon.ftv.screensaver"
+tier        = "risky"
+description = "Fire TV screensaver — ⚠ RISKY-UI"
+
+[[packages]]
+name        = "com.amazon.devicecontrol"
+tier        = "risky"
+description = "Amazon device control — ⚠ RISKY-UI"
+
+[[packages]]
+name        = "com.amazon.tv.devicecontrol"
+tier        = "risky"
+description = "Fire TV device control — ⚠ RISKY-UI"
+
+[[packages]]
+name        = "com.amazon.tv.devicecontrolsettings"
+tier        = "risky"
+description = "Fire TV device control settings — ⚠ RISKY-UI"
+
+[[packages]]
+name        = "com.amazon.tv.settings"
+tier        = "risky"
+description = "Amazon Settings app — ⚠ removal breaks Settings entirely"
+
+[[packages]]
+name        = "com.amazon.tv.settings.core"
+tier        = "risky"
+description = "Amazon Settings core — ⚠ RISKY-UI"
+
+[[packages]]
+name        = "com.amazon.tv.settings.v2"
+tier        = "risky"
+description = "Amazon Settings v2 — ⚠ RISKY-UI"
+
+[[packages]]
+name        = "com.amazon.device.settings.sdk.internal.library"
+tier        = "risky"
+description = "Amazon Device Settings Internal SDK — ⚠ RISKY-UI"
+
+[[packages]]
+name        = "com.amazon.application.compatibility.enforcer"
+tier        = "risky"
+description = "App compatibility enforcer — ⚠ FireOS 5.2.7.2"
+
+[[packages]]
+name        = "com.amazon.application.compatibility.enforcer.sdk.library"
+tier        = "risky"
+description = "App compatibility enforcer SDK — ⚠ FireOS 5.2.7.2"
+
+[[packages]]
+name        = "amazon.jackson19"
+tier        = "risky"
+description = "Amazon Jackson 1.9 — ⚠ FireOS 5.2.7.2"
+
+[[packages]]
+name        = "com.amazon.ssm"
+tier        = "risky"
+description = "Amazon System Status Monitor"
+
+[[packages]]
+name        = "com.amazon.ssmsys"
+tier        = "risky"
+description = "Amazon System Status Monitor system service"
+
+[[packages]]
+name        = "com.amazon.tcomm"
+tier        = "risky"
+description = "Amazon communication services — ⚠ REMOTE-APP"
+
+[[packages]]
+name        = "com.amazon.tcomm.client"
+tier        = "risky"
+description = "Amazon communication client — ⚠ REMOTE-APP"
+
+[[packages]]
+name        = "com.amazon.dp.logger"
+tier        = "risky"
+description = "Amazon DPlogger — ⚠ REMOTE-APP"
+
+[[packages]]
+name        = "com.amazon.storm.lightning.services"
+tier        = "risky"
+description = "Fire TV Lightning services — ⚠ REMOTE-APP"
+
+[[packages]]
+name        = "com.amazon.wcast.sink"
+tier        = "risky"
+description = "Amazon wcast sink — ⚠ SCREEN-MIRROR"
+
+[[packages]]
+name        = "com.amazon.malcolm"
+tier        = "risky"
+description = "Amazon Malcolm — USB TV tuner input service"
+
+[[packages]]
+name        = "com.amazon.tv.notificationcenter"
+tier        = "risky"
+description = "Amazon notification center settings activity"
+
+[[packages]]
+name        = "com.amazon.cpl"
+tier        = "risky"
+description = "Amazon captive portal launcher"
+
+[[packages]]
+name        = "com.android.captiveportallogin"
+tier        = "risky"
+description = "Android captive portal login"
+
+# ── Telemetry ────────────────────────────────────────────────────────────────
+[[packages]]
+name        = "com.amazon.device.metrics"
+tier        = "telemetry"
+description = "Amazon device metrics and reporting daemon"
+
+[[packages]]
+name        = "com.amazon.tv.fw.metrics"
+tier        = "telemetry"
+description = "Fire TV firmware/OS metrics service"
+
+[[packages]]
+name        = "com.amazon.wirelessmetrics.service"
+tier        = "telemetry"
+description = "Amazon wireless/network metrics reporting"
+
+[[packages]]
+name        = "com.amazon.adep"
+tier        = "telemetry"
+description = "Amazon analytics and data event pipeline daemon"
+
+[[packages]]
+name        = "com.amazon.tv.acr"
+tier        = "telemetry"
+description = "ACR: identifies and reports content you watch in real-time"
+
+[[packages]]
+name        = "com.amazon.ftvads.deeplinking"
+tier        = "telemetry"
+description = "Amazon ad deep-link interception service"
+
+[[packages]]
+name        = "com.amazon.hybridadidservice"
+tier        = "telemetry"
+description = "Amazon advertising ID management service"
+
+[[packages]]
+name        = "com.amazon.sneakpeek"
+tier        = "telemetry"
+description = "Amazon content preview and sponsored recommendation"
+
+[[packages]]
+name        = "com.amazon.shoptv.client"
+tier        = "telemetry"
+description = "'Shop the TV' purchase interception"
+
+[[packages]]
+name        = "com.amazon.whisperlink.core.android"
+tier        = "telemetry"
+description = "Amazon Sidewalk mesh network core"
+
+[[packages]]
+name        = "com.amazon.whisperjoin.middleware.np"
+tier        = "telemetry"
+description = "Amazon Sidewalk join middleware"
+
+[[packages]]
+name        = "com.amazon.whisperplay.service.install"
+tier        = "telemetry"
+description = "Amazon Whisperplay install service"
+
+[[packages]]
+name        = "com.amazon.tv.csapp"
+tier        = "telemetry"
+description = "Amazon customer service data collection (TV variant)"
+
+[[packages]]
+name        = "com.amazon.zazu"
+tier        = "telemetry"
+description = "Amazon metrics daemon (older FireOS)"
+
+[[packages]]
+name        = "com.amazon.csapp"
+tier        = "telemetry"
+description = "Amazon customer service telemetry (older)"
+
+[[packages]]
+name        = "com.amazon.ags"
+tier        = "telemetry"
+description = "Amazon Game Services telemetry"
+
+[[packages]]
+name        = "com.amazon.advertisingidsystem"
+tier        = "telemetry"
+description = "Amazon advertising ID management (older)"
+
+[[packages]]
+name        = "com.amazon.device.sso"
+tier        = "telemetry"
+description = "Amazon single sign-on identity tracking"
+
+[[packages]]
+name        = "com.amazon.compass"
+tier        = "telemetry"
+description = "Amazon usage telemetry aggregator (older)"

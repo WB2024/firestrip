@@ -1,0 +1,5 @@
+# firetv_stick_4k.toml
+# Device-specific overrides — populate as community testing confirms.
+# common.toml entries apply by default.
+
+packages = []

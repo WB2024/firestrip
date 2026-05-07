@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "firestrip"
+version = "0.1.0"
+description = "Linux-native TUI/CLI to debloat, strip telemetry, and reclaim your Amazon Fire TV via ADB"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+keywords = ["fire-tv", "amazon", "adb", "debloat", "tui", "linux"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "textual>=0.47.0",
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "tomli>=2.0.0; python_version < '3.11'",
+]
+
+[project.scripts]
+firestrip = "firestrip.main:run"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.1.0",
+    "mypy>=1.0",
+    "hatch",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["firestrip"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"firestrip/data" = "firestrip/data"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true

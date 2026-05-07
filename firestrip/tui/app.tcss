@@ -1,0 +1,100 @@
+/* firestrip TUI styles */
+
+Screen {
+    layout: vertical;
+}
+
+Header {
+    background: $primary;
+    color: $text;
+    height: 3;
+}
+
+Footer {
+    background: $panel;
+}
+
+#sidebar {
+    width: 18;
+    background: $panel;
+    padding: 1;
+    border-right: solid $primary-darken-2;
+    height: 100%;
+}
+
+#sidebar Button {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#content {
+    width: 1fr;
+    padding: 1 2;
+    height: 100%;
+}
+
+#package-list {
+    height: 1fr;
+    border: solid $primary;
+    padding: 0 1;
+}
+
+.tier-safe      { color: $success; }
+.tier-risky     { color: $warning; }
+.tier-telemetry { color: $error; }
+.tier-never     { color: $text-muted; }
+
+.status-connected    { color: $success; }
+.status-reconnecting { color: $warning; }
+.status-disconnected { color: $error; }
+
+#device-panel {
+    background: $panel;
+    border: solid $primary;
+    padding: 1 2;
+    height: auto;
+    margin-bottom: 1;
+}
+
+#stats-row {
+    layout: horizontal;
+    height: auto;
+    margin-bottom: 1;
+}
+
+.stat-card {
+    width: 1fr;
+    background: $panel;
+    border: solid $primary-darken-2;
+    padding: 1;
+    margin: 0 1;
+    height: auto;
+}
+
+ConfirmModal {
+    align: center middle;
+}
+
+#confirm-dialog {
+    width: 60;
+    height: auto;
+    max-height: 80%;
+    background: $surface;
+    border: double $primary;
+    padding: 1 2;
+}
+
+#confirm-items {
+    height: auto;
+    max-height: 20;
+    overflow-y: auto;
+}
+
+DataTable {
+    height: 1fr;
+}
+
+ProgressBar {
+    width: 100%;
+    margin-top: 1;
+}
