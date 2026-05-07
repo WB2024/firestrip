@@ -33,6 +33,26 @@ Footer {
     height: 100%;
 }
 
+InstallScreen #content {
+    height: auto;
+}
+
+InstallScreen #install-log {
+    height: 6;
+    border: solid $primary-darken-2;
+}
+
+InstallScreen #pkg-table {
+    height: 16;
+    border: solid $primary-darken-2;
+}
+
+InstallScreen #input-row,
+InstallScreen #uninstall-row {
+    height: auto;
+    margin-bottom: 1;
+}
+
 #package-list {
     height: 1fr;
     border: solid $primary;

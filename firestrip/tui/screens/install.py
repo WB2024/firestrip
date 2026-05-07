@@ -4,7 +4,7 @@ from pathlib import Path
 
 from textual import work
 from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, ScrollableContainer, Vertical
 from textual.widgets import (
     Button,
     DataTable,
@@ -30,7 +30,7 @@ class InstallScreen(FirestripScreen):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with Vertical(id="content"):
+        with ScrollableContainer(id="content"):
             # ── Install ──────────────────────────────────────────────────────
             yield Label("[bold]Install APK[/bold] — enter a local file path")
             with Horizontal(id="input-row"):
