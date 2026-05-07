@@ -89,16 +89,28 @@ class LauncherManager:
         return results
 
     def get_current_default(self) -> str:
+        """Return the package set as preferred HOME activity.
+
+        Parses ``dumpsys package preferred-xml`` which reliably reflects what
+        ``cmd package set-home-activity`` wrote, unlike ``resolve-activity``
+        which always returns the highest-priority candidate regardless of the
+        stored preference.
+        """
         try:
-            out = self._adb.shell(
-                "cmd package resolve-activity --brief "
-                "-a android.intent.action.MAIN -c android.intent.category.HOME"
-            )
+            out = self._adb.shell("dumpsys package preferred-xml")
         except ADBError:
             return ""
-        first = next((l for l in out.splitlines() if l.strip()), "")
-        if "/" in first:
-            return first.split("/", 1)[0].strip()
+        # State-machine: track the last <item name="pkg/Activity"> line,
+        # emit its package when we see a HOME category line.
+        current_item: str = ""
+        for line in out.splitlines():
+            stripped = line.strip()
+            if stripped.startswith('<item name="'):
+                end = stripped.find('"', 12)
+                if end > 12:
+                    current_item = stripped[12:end]
+            elif "android.intent.category.HOME" in stripped and current_item:
+                return current_item.split("/", 1)[0]
         return ""
 
     def install(self, apk_path: Path) -> bool:
@@ -205,5 +217,14 @@ class LauncherManager:
                 "" if ok else "could not disable Amazon launcher",
             ))
         except ADBError as exc:
-            results.append(ActionResult(AMAZON_LAUNCHER_PKG, False, "error", str(exc)))
+            err = str(exc).lower()
+            if "protected package" in err or "security exception" in err:
+                results.append(ActionResult(
+                    AMAZON_LAUNCHER_PKG, True, "warning",
+                    "Amazon launcher is a protected package on this firmware — "
+                    "cannot be disabled via ADB. The HOME preference is set; "
+                    "press HOME on your remote to confirm the new launcher is active.",
+                ))
+            else:
+                results.append(ActionResult(AMAZON_LAUNCHER_PKG, False, "error", str(exc)))
         return results

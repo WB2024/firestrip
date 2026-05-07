@@ -63,10 +63,25 @@ class MockADBClient:
     def disconnect(self) -> None:
         pass
 
+    def _preferred_xml(self) -> str:
+        return (
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>\n'
+            '<preferred-activities>\n'
+            f'    <item name="{self.current_home}/.ui.HomeActivity">\n'
+            '        <filter>\n'
+            '            <action name="android.intent.action.MAIN" />\n'
+            '            <cat name="android.intent.category.HOME" />\n'
+            '        </filter>\n'
+            '    </item>\n'
+            '</preferred-activities>'
+        )
+
     def shell(self, cmd: str, timeout: int = 30) -> str:
         self.commands_run.append(cmd)
         if "resolve-activity" in cmd:
             return f"{self.current_home}/.ui.HomeActivity"
+        if "preferred-xml" in cmd:
+            return self._preferred_xml()
         if cmd.startswith("dumpsys package"):
             return ""
         return ""
