@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
+
+_PKG_RE = re.compile(r"^  Package \[([^\]]+)\]")
+_LABEL_RE = re.compile(r"Application: label='([^']+)'")
 
 from .exceptions import (
     ADBBinaryNotFoundError,
@@ -234,3 +238,29 @@ class ADBClient:
 
     def get_prop(self, key: str) -> str:
         return self.shell(f"getprop {key}")
+
+    def get_app_labels(self) -> dict[str, str]:
+        """Return {package: display_name} by parsing a single dumpsys pipeline.
+
+        Runs ``dumpsys package packages`` filtered through grep on the device so
+        only Package/label lines are transferred.  Falls back silently to an
+        empty dict on any ADB error so callers can degrade gracefully.
+        """
+        try:
+            out = self.shell(
+                "dumpsys package packages | grep -e 'Package \\[' -e 'label='",
+                timeout=30,
+            )
+        except Exception:
+            return {}
+        labels: dict[str, str] = {}
+        current_pkg: str | None = None
+        for line in out.splitlines():
+            m = _PKG_RE.match(line)
+            if m:
+                current_pkg = m.group(1)
+            elif current_pkg:
+                m2 = _LABEL_RE.search(line)
+                if m2:
+                    labels[current_pkg] = m2.group(1)
+        return labels

@@ -61,7 +61,7 @@ class InstallScreen(FirestripScreen):
 
     def on_mount(self) -> None:
         table = self.query_one("#pkg-table", DataTable)
-        table.add_columns("Package name")
+        table.add_columns("App name", "Package")
         table.cursor_type = "row"
         self.query_one("#apk-path", Input).focus()
         self.load_packages()
@@ -142,13 +142,17 @@ class InstallScreen(FirestripScreen):
             packages = sorted(self.adb.pm_list_packages())
         except Exception:
             return
-        self.app.call_from_thread(self._populate_table, packages)
+        # Fetch friendly labels; empty dict is fine — table degrades gracefully
+        labels = self.adb.get_app_labels()
+        self.app.call_from_thread(self._populate_table, packages, labels)
 
-    def _populate_table(self, packages: list[str]) -> None:
+    def _populate_table(self, packages: list[str], labels: dict[str, str]) -> None:
         table = self.query_one("#pkg-table", DataTable)
         table.clear()
         for pkg in packages:
-            table.add_row(pkg, key=pkg)
+            # Use label if available; fall back to the last dotted segment
+            name = labels.get(pkg) or pkg.rsplit(".", 1)[-1]
+            table.add_row(name, pkg, key=pkg)
 
     def _start_uninstall(self) -> None:
         pkg = self.query_one("#pkg-name", Input).value.strip()
