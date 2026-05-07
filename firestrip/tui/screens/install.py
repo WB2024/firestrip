@@ -7,6 +7,7 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, ScrollableContainer, Vertical
 from textual.widgets import (
     Button,
+    Checkbox,
     DataTable,
     Footer,
     Header,
@@ -51,6 +52,7 @@ class InstallScreen(FirestripScreen):
                 id="pkg-name",
                 tooltip="Package name to uninstall",
             )
+            yield Checkbox("Keep app data after uninstall", id="chk-keep-data", value=False)
             with Horizontal(id="uninstall-buttons"):
                 yield Button("Uninstall", id="btn-uninstall", variant="error")
                 yield Button("↻ Refresh", id="btn-refresh", variant="default")
@@ -161,14 +163,15 @@ class InstallScreen(FirestripScreen):
         if self.adb is None:
             self.notify("No device connected", severity="error")
             return
+        keep_data = self.query_one("#chk-keep-data", Checkbox).value
         self.query_one("#btn-uninstall", Button).disabled = True
         self.query_one("#uninstall-status", Label).update(f"Uninstalling {pkg} …")
-        self.run_uninstall(pkg)
+        self.run_uninstall(pkg, keep_data)
 
     @work(thread=True, exclusive=False)
-    def run_uninstall(self, pkg: str) -> None:
+    def run_uninstall(self, pkg: str, keep_data: bool = False) -> None:
         try:
-            ok = self.adb.pm_uninstall(pkg, keep_data=True)
+            ok = self.adb.pm_uninstall(pkg, keep_data=keep_data)
             self.app.call_from_thread(self._uninstall_done, pkg, None if ok else "pm_uninstall returned failure")
         except Exception as exc:
             self.app.call_from_thread(self._uninstall_done, pkg, str(exc))
