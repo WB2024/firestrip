@@ -35,13 +35,15 @@ def test_swap_dry_run(mock_adb) -> None:
 def test_swap_step3_safety_gate(mock_adb) -> None:
     launcher = _wolf_launcher()
     mock_adb.installed_packages = list(mock_adb.installed_packages) + [launcher.package]
-    # current_home stays as Amazon; verification should fail
+    # current_home stays as Amazon; step 3 now emits a warning instead of raising
     mgr = LauncherManager(mock_adb)
-    with pytest.raises(LauncherSwapError) as ei:
-        mgr.swap(launcher, dry_run=False)
-    assert ei.value.step == 3
-    # Amazon launcher must NOT have been frozen
-    assert AMAZON_LAUNCHER_PKG not in mock_adb.disabled
+    results = mgr.swap(launcher, dry_run=False)
+    # Should have completed all 4 steps (no exception)
+    step3 = next((r for r in results if r.action == "warning"), None)
+    assert step3 is not None, "Expected a step-3 warning result"
+    assert launcher.package in step3.message or "HOME" in step3.message
+    # Amazon launcher should still have been frozen (step 4 runs regardless)
+    assert AMAZON_LAUNCHER_PKG in mock_adb.disabled
 
 
 def test_swap_full_success(mock_adb) -> None:

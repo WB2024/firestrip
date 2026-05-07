@@ -67,7 +67,8 @@ def strip_services(adb: ADBClient, dry_run: bool = True) -> list[ActionResult]:
 
     for svc in TELEMETRY_SERVICES:
         if svc not in installed:
-            results.append(ActionResult(svc, False, "skipped", "not installed"))
+            # Not installed = already removed/debloated; goal is met.
+            results.append(ActionResult(svc, True, "skipped", "not installed"))
             continue
         if dry_run:
             results.append(ActionResult(svc, True, "dry_run"))

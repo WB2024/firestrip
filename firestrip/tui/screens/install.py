@@ -4,7 +4,7 @@ from pathlib import Path
 
 from textual import work
 from textual.app import ComposeResult
-from textual.containers import Horizontal, ScrollableContainer, Vertical
+from textual.containers import Horizontal, ScrollableContainer
 from textual.widgets import (
     Button,
     Checkbox,
@@ -28,6 +28,13 @@ class InstallScreen(FirestripScreen):
         ("escape", "app.pop_screen", "Back"),
         ("r", "refresh_packages", "Refresh list"),
     ]
+
+    # ── Sorting state ─────────────────────────────────────────────────────────
+    _COLS: tuple[str, ...] = ("name", "package", "type")
+    _sort_col: str = "name"
+    _sort_reverse: bool = False
+    # Cached after ADB load: list of (display_name, package, type_str)
+    _cached_rows: list[tuple[str, str, str]]
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -57,15 +64,50 @@ class InstallScreen(FirestripScreen):
                 yield Button("Uninstall", id="btn-uninstall", variant="error")
                 yield Button("↻ Refresh", id="btn-refresh", variant="default")
             yield Label("", id="uninstall-status")
+            yield Checkbox("Hide system apps", id="chk-hide-system", value=False)
             yield DataTable(id="pkg-table")
         yield Footer()
 
     def on_mount(self) -> None:
+        self._cached_rows = []
         table = self.query_one("#pkg-table", DataTable)
-        table.add_columns("App name", "Package")
+        table.add_column("App name", key="name")
+        table.add_column("Package", key="package")
+        table.add_column("Type", key="type")
         table.cursor_type = "row"
         self.query_one("#apk-path", Input).focus()
         self.load_packages()
+
+    # ── Sorting / filtering ───────────────────────────────────────────────────
+
+    def on_data_table_header_selected(self, event: DataTable.HeaderSelected) -> None:
+        col = str(event.column_key.value)
+        if col not in self._COLS:
+            return
+        if col == self._sort_col:
+            self._sort_reverse = not self._sort_reverse
+        else:
+            self._sort_col = col
+            self._sort_reverse = False
+        self._render_table()
+
+    def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        if event.checkbox.id == "chk-hide-system":
+            self._render_table()
+
+    def _render_table(self) -> None:
+        hide_system = self.query_one("#chk-hide-system", Checkbox).value
+        rows = (
+            [r for r in self._cached_rows if r[2] != "system"]
+            if hide_system
+            else list(self._cached_rows)
+        )
+        col_idx = self._COLS.index(self._sort_col)
+        rows.sort(key=lambda r: r[col_idx].casefold(), reverse=self._sort_reverse)
+        table = self.query_one("#pkg-table", DataTable)
+        table.clear()
+        for name, pkg, pkg_type in rows:
+            table.add_row(name, pkg, pkg_type, key=pkg)
 
     # ── Install ───────────────────────────────────────────────────────────────
 
@@ -83,7 +125,6 @@ class InstallScreen(FirestripScreen):
                 self.load_packages()
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
-        """Clicking a row populates the package name input."""
         key = event.row_key.value
         if key:
             self.query_one("#pkg-name", Input).value = key
@@ -127,7 +168,7 @@ class InstallScreen(FirestripScreen):
             log.write_line(f"✓ {name} installed successfully")
             self.query_one("#install-status", Label).update(f"[green]✓ {name} installed[/green]")
             self.notify(f"{name} installed")
-            self.load_packages()  # refresh list so new package appears
+            self.load_packages()
         self.query_one("#btn-install", Button).disabled = False
 
     # ── Uninstall ─────────────────────────────────────────────────────────────
@@ -140,20 +181,24 @@ class InstallScreen(FirestripScreen):
         if self.adb is None:
             return
         try:
-            packages = sorted(self.adb.pm_list_packages())
+            packages = self.adb.pm_list_packages()
         except Exception:
             return
-        # Fetch friendly labels; empty dict is fine — table degrades gracefully
         labels = self.adb.get_app_labels()
-        self.app.call_from_thread(self._populate_table, packages, labels)
+        system_pkgs = self.adb.pm_list_system_packages()
+        rows: list[tuple[str, str, str]] = [
+            (
+                labels.get(pkg) or pkg.rsplit(".", 1)[-1],
+                pkg,
+                "system" if pkg in system_pkgs else "user",
+            )
+            for pkg in packages
+        ]
+        self.app.call_from_thread(self._store_and_render, rows)
 
-    def _populate_table(self, packages: list[str], labels: dict[str, str]) -> None:
-        table = self.query_one("#pkg-table", DataTable)
-        table.clear()
-        for pkg in packages:
-            # Use label if available; fall back to the last dotted segment
-            name = labels.get(pkg) or pkg.rsplit(".", 1)[-1]
-            table.add_row(name, pkg, key=pkg)
+    def _store_and_render(self, rows: list[tuple[str, str, str]]) -> None:
+        self._cached_rows = rows
+        self._render_table()
 
     def _start_uninstall(self) -> None:
         pkg = self.query_one("#pkg-name", Input).value.strip()
@@ -184,6 +229,6 @@ class InstallScreen(FirestripScreen):
             self.query_one("#uninstall-status", Label).update(f"[green]✓ {pkg} uninstalled[/green]")
             self.query_one("#pkg-name", Input).value = ""
             self.notify(f"{pkg} uninstalled")
-            self.load_packages()  # refresh to remove it from the list
+            self.load_packages()
         self.query_one("#btn-uninstall", Button).disabled = False
 

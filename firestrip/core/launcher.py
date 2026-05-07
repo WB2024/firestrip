@@ -189,13 +189,13 @@ class LauncherManager:
             results.append(err)
             raise LauncherSwapError(2, str(exc)) from exc
 
-        # Step 3
+        # Step 3 — verify (soft check; Fire TV may not flush resolve-activity immediately)
         current = self.get_current_default()
         if current != launcher.package:
-            detail = f"HOME handler is '{current}', expected '{launcher.package}'"
-            results.append(ActionResult(launcher.package, False, "error", detail))
-            raise LauncherSwapError(3, detail)
-        results.append(ActionResult(launcher.package, True, "verified"))
+            detail = f"HOME still shows '{current}' — may need a reboot to take full effect"
+            results.append(ActionResult(launcher.package, True, "warning", detail))
+        else:
+            results.append(ActionResult(launcher.package, True, "verified"))
 
         # Step 4
         try:

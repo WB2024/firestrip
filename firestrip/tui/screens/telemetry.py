@@ -81,10 +81,20 @@ class TelemetryScreen(FirestripScreen):
             return
         s_results = strip_settings(self.adb, dry_run=False)
         v_results = strip_services(self.adb, dry_run=False)
-        ok = sum(1 for r in s_results + v_results if r.success)
-        total = len(s_results) + len(v_results)
-        self.app.call_from_thread(self._done, ok, total)
+        settings_ok = sum(1 for r in s_results if r.success)
+        services_disabled = sum(1 for r in v_results if r.success and r.action == "disabled")
+        services_absent = sum(1 for r in v_results if r.action == "skipped")
+        services_failed = sum(1 for r in v_results if not r.success)
+        self.app.call_from_thread(self._done, settings_ok, len(s_results),
+                                  services_disabled, services_absent, services_failed)
 
-    def _done(self, ok: int, total: int) -> None:
-        self.notify(f"Telemetry strip complete ({ok}/{total})")
+    def _done(self, settings_ok: int, settings_total: int,
+              services_disabled: int, services_absent: int, services_failed: int) -> None:
+        parts = [f"{settings_ok}/{settings_total} settings applied",
+                 f"{services_disabled} services disabled"]
+        if services_absent:
+            parts.append(f"{services_absent} already absent")
+        if services_failed:
+            parts.append(f"{services_failed} failed")
+        self.notify("Strip complete — " + ", ".join(parts))
         self.refresh_data()

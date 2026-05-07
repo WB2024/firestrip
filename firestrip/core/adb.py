@@ -226,6 +226,19 @@ class ADBClient:
                 result.append(line.split("package:", 1)[1])
         return result
 
+    def pm_list_system_packages(self) -> frozenset[str]:
+        """Return the set of system packages (``pm list packages -s``)."""
+        try:
+            out = self.shell("pm list packages -s")
+        except Exception:
+            return frozenset()
+        result: list[str] = []
+        for line in out.splitlines():
+            line = line.strip()
+            if line.startswith("package:"):
+                result.append(line.split("package:", 1)[1])
+        return frozenset(result)
+
     def settings_put(self, namespace: str, key: str, value: str) -> bool:
         result = self._run(["shell", f"settings put {namespace} {key} {value}"])
         return result.returncode == 0

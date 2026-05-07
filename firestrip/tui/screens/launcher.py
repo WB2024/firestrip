@@ -109,17 +109,24 @@ class LauncherScreen(FirestripScreen):
         launcher = self._launchers[self._selected_idx]
         apk_text = self.query_one("#apk-input", Input).value.strip()
         apk = Path(apk_text) if apk_text else None
-        steps = (
-            [f"Use installed {launcher.package}"]
-            if launcher.is_custom or apk is None
-            else [f"Install {launcher.package} from {apk.name}"]
-        ) + [
-            "Set as default HOME",
-            "Verify HOME handler",
-            "Freeze Amazon launcher",
+
+        if launcher.is_custom or apk is None:
+            step1 = f"1. Confirm '{launcher.package}' is already installed"
+        else:
+            step1 = f"1. Install '{apk.name}' onto the device"
+
+        steps = [
+            step1,
+            f"2. Set '{launcher.name}' as the default HOME app",
+            "3. Verify the HOME activity changed",
+            "4. Disable the Amazon launcher so it cannot override your choice",
         ]
+        warning = (
+            f"Swap launcher to {launcher.name}?\n"
+            "All 4 steps run in sequence. You can restore the Amazon launcher at any time."
+        )
         self.app.push_screen(
-            ConfirmModal(f"Swap to {launcher.name}?", steps, "Swap"),
+            ConfirmModal(warning, steps, "Swap"),
             lambda confirmed: self._on_confirm(launcher, apk, confirmed),
         )
 
@@ -142,8 +149,11 @@ class LauncherScreen(FirestripScreen):
         if error:
             self.notify(f"Swap failed: {error}", severity="error")
         else:
-            ok = sum(1 for r in results if r.success)
-            self.notify(f"Swap complete ({ok}/{len(results)} steps)")
+            warnings = [r.message for r in results if r.action == "warning" and r.message]
+            if warnings:
+                self.notify(f"Swap done (check: {warnings[0]})", severity="warning")
+            else:
+                self.notify("Swap complete — launcher changed successfully")
         self.refresh_default()
 
     def _restore(self) -> None:

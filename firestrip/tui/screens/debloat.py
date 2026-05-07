@@ -76,12 +76,19 @@ class DebloatScreen(FirestripScreen):
             self._selected.add(key)
         self._populate(self._entries)
 
+    def _visible_entries(self) -> list:
+        """Return only the entries currently shown given the active tier filter."""
+        if self._tier_filter is None:
+            return list(self._entries)
+        return [e for e in self._entries if e.tier in self._tier_filter]
+
     def action_select_all(self) -> None:
-        self._selected = {e.package_name for e in self._entries}
+        self._selected.update(e.package_name for e in self._visible_entries())
         self._populate(self._entries)
 
     def action_deselect_all(self) -> None:
-        self._selected.clear()
+        visible_pkgs = {e.package_name for e in self._visible_entries()}
+        self._selected -= visible_pkgs
         self._populate(self._entries)
 
     def action_filter_safe(self) -> None:
