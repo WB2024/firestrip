@@ -57,13 +57,7 @@ Existing tools are either Windows-only, macOS-only, outdated shell scripts, or d
 
 ## Installation
 
-### pipx (recommended)
-
-```bash
-pipx install firestrip
-```
-
-### From source
+### From source (current recommended method)
 
 ```bash
 git clone https://github.com/yourusername/firestrip.git
@@ -73,14 +67,16 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-### AppImage (no install, no deps)
-
-Download the latest `.AppImage` from [Releases](https://github.com/yourusername/firestrip/releases), mark it executable, and run it:
+### pipx *(not yet published to PyPI)*
 
 ```bash
-chmod +x firestrip-x86_64.AppImage
-./firestrip-x86_64.AppImage
+# coming once published:
+pipx install firestrip
 ```
+
+### AppImage *(not yet built)*
+
+> AppImage packaging is planned for a future release. Track progress in [Releases](https://github.com/yourusername/firestrip/releases).
 
 ### USB udev rules (one-time setup for rootless USB ADB)
 
