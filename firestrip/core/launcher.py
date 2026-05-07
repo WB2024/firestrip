@@ -135,11 +135,34 @@ class LauncherManager:
             return False
 
     def freeze_amazon_launcher(self) -> bool:
+        """Try all available no-root approaches to suppress the Amazon launcher.
+
+        Attempts (in order):
+        1. ``pm uninstall -k --user 0`` — works on FireOS 5 / older firmware
+        2. ``pm disable-user --user 0`` — works on some older ADB builds
+
+        Both are blocked on newer AFTBOXE1/AFTMM firmware. Raises ``ADBError``
+        if all attempts fail so the caller can report the limitation.
+        """
+        # Approach 1: per-user uninstall (keeps data, restores on factory-reset)
+        try:
+            out = self._adb.shell(f"pm uninstall -k --user 0 {AMAZON_LAUNCHER_PKG}")
+            if "success" in out.lower():
+                return True
+        except ADBCommandError:
+            pass
+        # Approach 2: disable for user
         return self._adb.pm_disable(AMAZON_LAUNCHER_PKG)
 
     def restore_amazon_launcher(self) -> bool:
+        # Try re-enabling first (counterpart to pm disable-user)
         try:
             self._adb.pm_enable(AMAZON_LAUNCHER_PKG)
+        except ADBError:
+            pass
+        # Also try pm install-existing (counterpart to pm uninstall --user 0)
+        try:
+            self._adb.shell(f"pm install-existing --user 0 {AMAZON_LAUNCHER_PKG}")
         except ADBError as exc:
             raise LauncherError(f"Failed to enable Amazon launcher: {exc}") from exc
         for activity in AMAZON_LAUNCHER_ACTIVITIES:
@@ -218,12 +241,15 @@ class LauncherManager:
             ))
         except ADBError as exc:
             err = str(exc).lower()
-            if "protected package" in err or "security exception" in err:
+            blocked = (
+                "protected package" in err
+                or "security exception" in err
+                or "cannot disable" in err
+            )
+            if blocked:
                 results.append(ActionResult(
                     AMAZON_LAUNCHER_PKG, True, "warning",
-                    "Amazon launcher is a protected package on this firmware — "
-                    "cannot be disabled via ADB. The HOME preference is set; "
-                    "press HOME on your remote to confirm the new launcher is active.",
+                    "root_required",
                 ))
             else:
                 results.append(ActionResult(AMAZON_LAUNCHER_PKG, False, "error", str(exc)))

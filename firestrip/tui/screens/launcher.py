@@ -149,11 +149,21 @@ class LauncherScreen(FirestripScreen):
         if error:
             self.notify(f"Swap failed: {error}", severity="error")
         else:
-            warnings = [r.message for r in results if r.action == "warning" and r.message]
-            if warnings:
-                self.notify(f"Swap done (check: {warnings[0]})", severity="warning")
+            warnings = [r for r in results if r.action == "warning"]
+            root_required = any(r.message == "root_required" for r in warnings)
+            if root_required:
+                self.notify(
+                    "HOME preference set — but Amazon launcher cannot be suppressed "
+                    "without root on this firmware. On older FireOS it is removed "
+                    "automatically.",
+                    severity="warning",
+                    timeout=12,
+                )
             else:
-                self.notify("Swap complete — launcher changed successfully")
+                self.notify("Swap complete — press HOME on your remote to confirm the new launcher is active")
+                for w in warnings:
+                    if w.message:
+                        self.notify(w.message, severity="warning", timeout=8)
         self.refresh_default()
 
     def _restore(self) -> None:

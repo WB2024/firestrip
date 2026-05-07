@@ -90,8 +90,13 @@ def _require_adb() -> ADBClient:
 def _print_results(results: list[ActionResult]) -> None:
     for r in results:
         marker = "✓" if r.success else "✗"
-        msg = f" — {r.message}" if r.message else ""
-        typer.echo(f"  {marker} [{r.action}] {r.package}{msg}")
+        msg = r.message or ""
+        if msg == "root_required":
+            msg = ("Amazon launcher is a protected package on this firmware — "
+                   "cannot be suppressed via ADB without root. "
+                   "The HOME preference IS stored; on older FireOS it is removed automatically.")
+        display = f" — {msg}" if msg else ""
+        typer.echo(f"  {marker} [{r.action}] {r.package}{display}")
 
 
 # ── device & udev ───────────────────────────────────────────────────────────
