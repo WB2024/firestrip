@@ -47,10 +47,18 @@ InstallScreen #pkg-table {
     border: solid $primary-darken-2;
 }
 
-InstallScreen #input-row,
-InstallScreen #uninstall-row {
+InstallScreen Input {
+    margin-bottom: 1;
+}
+
+InstallScreen #uninstall-buttons {
     height: auto;
     margin-bottom: 1;
+}
+
+InstallScreen #uninstall-buttons Button {
+    width: auto;
+    margin-right: 1;
 }
 
 #package-list {

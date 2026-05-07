@@ -33,26 +33,25 @@ class InstallScreen(FirestripScreen):
         with ScrollableContainer(id="content"):
             # ── Install ──────────────────────────────────────────────────────
             yield Label("[bold]Install APK[/bold] — enter a local file path")
-            with Horizontal(id="input-row"):
-                yield Input(
-                    placeholder="/path/to/app.apk",
-                    id="apk-path",
-                    tooltip="Full path to the APK file on this machine",
-                )
-                yield Button("Install", id="btn-install", variant="primary")
+            yield Input(
+                placeholder="/path/to/app.apk",
+                id="apk-path",
+                tooltip="Full path to the APK file on this machine",
+            )
+            yield Button("Install APK", id="btn-install", variant="primary")
             yield Label("", id="install-status")
             yield Log(id="install-log", auto_scroll=True, max_lines=6)
 
             yield Rule()
 
             # ── Uninstall ────────────────────────────────────────────────────
-            yield Label("[bold]Uninstall package[/bold] — select from list or type a name")
-            with Horizontal(id="uninstall-row"):
-                yield Input(
-                    placeholder="com.example.app",
-                    id="pkg-name",
-                    tooltip="Package name to uninstall",
-                )
+            yield Label("[bold]Uninstall package[/bold] — select from list or type a package name")
+            yield Input(
+                placeholder="com.example.app",
+                id="pkg-name",
+                tooltip="Package name to uninstall",
+            )
+            with Horizontal(id="uninstall-buttons"):
                 yield Button("Uninstall", id="btn-uninstall", variant="error")
                 yield Button("↻ Refresh", id="btn-refresh", variant="default")
             yield Label("", id="uninstall-status")
