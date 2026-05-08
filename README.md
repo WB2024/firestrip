@@ -1,63 +1,115 @@
 # firestrip
 
-**A Linux-native TUI/CLI tool to debloat, strip telemetry, and reclaim your Amazon Fire TV via ADB — no Windows required.**
+**Reclaim your Amazon Fire TV from your Linux terminal.**
 
-> Take back control of your Fire TV hardware. Remove Amazon's bloatware, silence telemetry, swap out the launcher, and tune device settings — all from your Linux terminal over ADB (USB or network).
+firestrip is a Linux-native TUI and CLI tool that removes Amazon's bloatware, silences telemetry, swaps the launcher, and tunes device settings — entirely over ADB, no root required, no Windows in sight.
 
 ---
 
-## Why firestrip?
+## The Problem
 
-Amazon Fire TV hardware is excellent. The software is not. Out of the box you get:
+Amazon Fire TV hardware is genuinely good. The software is not. Out of the box:
 
-- A launcher plastered with ads and "recommendations"
-- Dozens of pre-installed apps you cannot remove through normal means
-- Aggressive telemetry and data collection you never consented to
-- Amazon Sidewalk (device mesh networking) running silently in the background
-- A sluggish, locked-down UI that prioritises Amazon's revenue over your experience
+- The launcher is plastered with ads and "recommendations" you never asked for
+- Dozens of background services collect usage data, fingerprint your viewing habits via ACR, and feed an advertising ID you can't easily opt out of
+- Amazon Sidewalk runs silently, sharing your device's network with strangers
+- Pre-installed apps you can't remove bloat storage and RAM
+- The UI is optimised for Amazon's revenue, not your experience
 
-Existing tools are either Windows-only, macOS-only, outdated shell scripts, or don't cover Fire TV sticks at all. **firestrip** is the tool that should have existed years ago — built for Linux, safe by default, and comprehensive.
+Every existing tool to fix this is either Windows-only, macOS-only, an unmaintained shell script, or doesn't cover Fire TV at all. firestrip was built to be the tool that should have existed years ago.
+
+---
+
+## Screenshots
+
+### Home screen — device connected
+
+<!-- SCREENSHOT: firestrip TUI home screen with a device connected, showing the device model, FireOS version, and Android version in the status cards at the top, with the four quick-action buttons visible below. Capture at full terminal width. -->
+> **`screenshots/home-connected.png`** — _The home screen after connecting to a device. Shows live device info: model name, FireOS build, Android version, and connection status._
+
+---
+
+### Debloat screen — packages loaded
+
+<!-- SCREENSHOT: The debloat screen with the package list fully loaded. Tier filter buttons (All / Safe / Risky / Telemetry) visible in the sidebar. Several packages selected (marked with x). Capture before hitting Apply so the list is visible. -->
+> **`screenshots/debloat-packages.png`** — _Package list with tier filter active. Packages are colour-coded by tier (Safe / Risky / Telemetry). Select individually or press `a` to select all visible._
+
+---
+
+### Confirm modal — before applying changes
+
+<!-- SCREENSHOT: The confirmation modal dialog open, showing the list of packages about to be disabled with the Disable / Cancel buttons. This is the safety gate that appears before any destructive action. -->
+> **`screenshots/confirm-modal.png`** — _Every destructive action goes through a confirmation modal. The full list of changes is shown before anything executes._
+
+---
+
+### Telemetry screen — current vs target values
+
+<!-- SCREENSHOT: The telemetry screen showing the two-panel layout: the settings DataTable (namespace/key, current value, target value) at the top, and the services list below it showing which telemetry packages are installed vs already absent. -->
+> **`screenshots/telemetry-screen.png`** — _Telemetry settings shown with their current live values and the target firestrip will write. Services list shows installed (✓) vs already removed (·)._
+
+---
+
+### Launcher screen — available launchers
+
+<!-- SCREENSHOT: The launcher screen showing the ListView of available launchers (Wolf Launcher, FLauncher, Sideload Launcher, and any device-detected extras tagged [on device]). The current default label at the bottom should show the active launcher package. -->
+> **`screenshots/launcher-screen.png`** — _All HOME-intent handlers found on the device are listed. Pre-defined launchers are shown with FOSS tags where applicable; device-detected extras are tagged [on device]._
+
+---
+
+### Install / Uninstall screen — package table
+
+<!-- SCREENSHOT: The install screen showing the DataTable of installed packages (App name, Package, Type columns). Hide-system-apps checkbox visible. Ideally with a few rows visible to show the sortable columns. -->
+> **`screenshots/install-screen.png`** — _Full package browser with sortable columns. Click any column header to sort. Toggle "Hide system apps" to focus on user-installed packages. Select a row to populate the uninstall field._
+
+---
+
+### CLI — debloat dry-run output
+
+<!-- SCREENSHOT: Terminal output of `firestrip --host 192.168.x.x debloat run --preset safe` (without --apply), showing the dry-run listing of packages that would be disabled, with their tier markers. -->
+> **`screenshots/cli-debloat-dryrun.png`** — _CLI dry-run output. Nothing executes until `--apply` is added. Safe for exploration._
 
 ---
 
 ## Features
 
-| Feature | Status |
+| Feature | Detail |
 |---|---|
-| ADB connection manager (USB + TCP/IP) | ✅ |
-| Device auto-detection and model fingerprinting | ✅ |
-| Bloatware removal (per-device safe/risky/telemetry classification) | ✅ |
-| Telemetry stripping (packages + ADB settings layer) | ✅ |
-| Amazon Sidewalk disablement | ✅ |
-| Launcher replacement (Wolf Launcher, FLauncher, Sideload Launcher) | ✅ |
-| Device settings tuning | ✅ |
-| Pre-action backup (full package snapshot) | ✅ |
-| One-command restore from backup | ✅ |
-| Dry-run mode (preview before any action) | ✅ |
-| Interactive TUI (Textual-based) | ✅ |
-| Headless CLI mode (scriptable) | ✅ |
-| No systemd dependency | ✅ |
+| **Interactive TUI** | 7-screen Textual app — Debloat, Telemetry, Launcher, Settings, Backup, Install/Uninstall, Home |
+| **Headless CLI** | Fully scriptable; all operations available without the TUI |
+| **Device auto-detection** | Fingerprints model from `ro.product.model` and loads the correct package profile |
+| **Bloatware removal** | Per-device TOML database, three-tier classification, confirmation before execution |
+| **Telemetry stripping** | 7 ADB settings overrides + 20 telemetry service packages |
+| **Amazon Sidewalk** | Disabled via `amazon:sidewalk_enabled=0` |
+| **ACR disablement** | Automatic Content Recognition stopped at the settings layer |
+| **Launcher swap** | Install, set as HOME default, freeze Amazon launcher — 4-step verified workflow |
+| **APK install/uninstall** | Install from local path or uninstall any package; sortable package browser |
+| **Backup & restore** | Full JSON snapshot (packages + settings + launcher) before any action |
+| **Dry-run by default** | Nothing executes until `--apply` is passed or confirmed in TUI |
+| **USB + TCP/IP ADB** | Both connection modes supported; udev setup helper included |
+| **No root required** | All operations use documented ADB commands only |
+| **No systemd** | Zero systemd dependencies; works on MX Linux, Devuan, Void, etc. |
 
 ---
 
 ## Requirements
 
 - **Python 3.10+**
-- **ADB** installed and on `$PATH` (`android-tools-adb` on Debian/MX, `android-tools` on Arch)
-- An **Amazon Fire TV** device with **ADB debugging enabled** (Settings → My Fire TV → Developer Options → ADB Debugging)
-- Connected via **USB** or **network (TCP/IP)**
+- **ADB** on `$PATH` — `android-tools-adb` on Debian/MX Linux, `android-tools` on Arch
+- An Amazon Fire TV with ADB debugging enabled
+- USB cable or Fire TV on the same network
 
 ### Enable ADB on your Fire TV
 
-1. Settings → My Fire TV → About → click "Build" 7 times to unlock Developer Options
-2. Settings → My Fire TV → Developer Options → ADB Debugging → ON
-3. For network ADB: Settings → My Fire TV → Developer Options → Network Debugging → ON
+1. **Settings → My Fire TV → About** — click the **Build** row 7 times to unlock Developer Options
+2. **Settings → My Fire TV → Developer Options → ADB Debugging** → ON
+3. For network ADB: **Developer Options → Network Debugging** → ON (note the IP address shown)
 
 ---
 
 ## Installation
 
-### From source (current recommended method)
+### From source
 
 ```bash
 git clone https://github.com/WB2024/firestrip.git
@@ -67,237 +119,267 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-### pipx *(not yet published to PyPI)*
+### USB udev rules (one-time — rootless USB ADB)
 
 ```bash
-# coming once published:
+sudo firestrip setup-udev
+# Adds: SUBSYSTEM=="usb", ATTR{idVendor}=="1949", MODE="0666", GROUP="plugdev"
+# Then: sudo usermod -aG plugdev $USER  (log out and back in)
+```
+
+### pipx / PyPI
+
+```bash
+# Not yet published — coming soon:
 pipx install firestrip
 ```
 
-### AppImage *(not yet built)*
+---
 
-> AppImage packaging is planned for a future release. Track progress in [Releases](https://github.com/yourusername/firestrip/releases).
-
-### USB udev rules (one-time setup for rootless USB ADB)
+## TUI Mode
 
 ```bash
-firestrip setup-udev
-# or manually:
-echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="1949", MODE="0666", GROUP="plugdev"' \
-  | sudo tee /etc/udev/rules.d/51-android.rules
-sudo udevadm control --reload-rules && sudo udevadm trigger
+firestrip                        # auto-detect device
+firestrip --host 192.168.1.42    # network ADB
+firestrip --usb                  # USB ADB
 ```
+
+The TUI launches to the home screen. All screens are keyboard-navigable:
+
+| Key | Action |
+|---|---|
+| `1` | Debloat |
+| `2` | Telemetry |
+| `3` | Launcher |
+| `4` | Settings |
+| `5` | Backup |
+| `6` | Install / Uninstall APK |
+| `Esc` | Back |
+| `q` | Quit |
+
+Inside the **Debloat** screen:
+
+| Key | Action |
+|---|---|
+| `a` | Select all visible packages |
+| `n` | Deselect all visible packages |
+| `s` | Filter to Safe tier only |
+| `p` | Preview / confirm selection |
+| `Enter` | Toggle row selection |
 
 ---
 
-## Usage
-
-### TUI Mode (default)
+## CLI Reference
 
 ```bash
-# Auto-detect connected device
-firestrip
-
-# Connect to a specific network device
-firestrip --host 192.168.1.42
-
-# Connect via USB
-firestrip --usb
-```
-
-### CLI / Headless Mode
-
-```bash
-# Show connected device info
+# Device info
 firestrip --host 192.168.1.138 device
 
-# List all packages eligible for removal
+# Debloat
 firestrip --host 192.168.1.138 debloat list
-
-# Preview what safe debloat would do (dry-run is the default — no --apply = no action)
 firestrip --host 192.168.1.138 debloat run --preset safe
-
-# Apply safe debloat
 firestrip --host 192.168.1.138 debloat run --preset safe --apply
-
-# Apply aggressive debloat (safe + risky + telemetry packages)
 firestrip --host 192.168.1.138 debloat run --preset aggressive --apply
-
-# Remove a single specific package
 firestrip --host 192.168.1.138 debloat run --package com.amazon.bueller.music --apply
 
-# Show current telemetry setting values
+# Telemetry
 firestrip --host 192.168.1.138 telemetry status
-
-# Strip all telemetry (settings + service packages)
 firestrip --host 192.168.1.138 telemetry strip --apply
 
-# List available launchers
+# Launcher
 firestrip --host 192.168.1.138 launcher list
-
-# Set a replacement launcher (APK must be installed or passed with --apk)
+firestrip --host 192.168.1.138 launcher status
+firestrip --host 192.168.1.138 launcher scan
 firestrip --host 192.168.1.138 launcher set wolf --apply
 firestrip --host 192.168.1.138 launcher set wolf --apk ~/Wolf.apk --apply
-
-# Restore Amazon launcher
 firestrip --host 192.168.1.138 launcher restore --apply
 
-# Create a backup
-firestrip --host 192.168.1.138 backup create --output ~/firetv-backup.json
+# Settings tweaks
+firestrip --host 192.168.1.138 settings status
+firestrip --host 192.168.1.138 settings apply --apply
 
-# List saved backups
+# APK install / uninstall
+firestrip --host 192.168.1.138 apk install --path ~/MyApp.apk
+firestrip --host 192.168.1.138 apk uninstall --package com.example.app
+
+# Backup & restore
+firestrip --host 192.168.1.138 backup create
 firestrip --host 192.168.1.138 backup list
+firestrip --host 192.168.1.138 restore --input ~/.local/share/firestrip/backups/backup.json
+firestrip --host 192.168.1.138 restore --input ~/.local/share/firestrip/backups/backup.json --apply
 
-# Restore from backup (dry-run preview)
-firestrip --host 192.168.1.138 restore --input ~/firetv-backup.json
-
-# Restore from backup (apply)
-firestrip --host 192.168.1.138 restore --input ~/firetv-backup.json --apply
-
-# Restore most recent backup including launcher
-firestrip --host 192.168.1.138 restore --latest --launcher --apply
-
-# USB variants
+# USB
 firestrip --usb debloat run --preset safe --apply
-firestrip --usb telemetry strip --apply
 ```
 
----
-
-## TUI Overview
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  firestrip  v0.1.0                  Device: Fire TV Box (4K)    │
-│  Connected: 192.168.1.138:5555 ✓    Android 9 / PS7712.5370N   │
-├──────────────────┬──────────────────────────────────────────────┤
-│                  │                                              │
-│  [1] Debloat     │  Installed Bloat Packages  (34 found)        │
-│  [2] Telemetry   │  ┌──────────────────────────────────────┐   │
-│  [3] Launcher    │  │ [x] com.amazon.venezia       SAFE    │   │
-│  [4] Settings    │  │ [x] com.amazon.bueller.music SAFE    │   │
-│  [5] Backup      │  │ [x] com.amazon.cloud9        SAFE    │   │
-│  [q] Quit        │  │ [ ] com.amazon.device.software.ota RISKY │
-│                  │  │ [x] com.amazon.device.metrics  TEL.  │   │
-│                  │  └──────────────────────────────────────┘   │
-│                  │  [A]ll  [N]one  [S]afe only  [P]review      │
-│                  │                      [ENTER] Apply Changes   │
-└──────────────────┴──────────────────────────────────────────────┘
-```
-
-Navigate with arrow keys or mouse. All actions show a confirmation + dry-run preview before executing. The **Backup** screen handles both creating backups and restoring from previous ones.
+Dry-run is always the default. **Nothing is changed on the device unless `--apply` is explicitly passed.**
 
 ---
 
 ## Package Classification
 
-firestrip categorises every Fire TV package into one of four tiers:
+Every package in the database is assigned one of four tiers:
 
-| Tier | Colour | Description |
-|---|---|---|
-| `SAFE` | Green | Confirmed safe to remove. No system dependencies. |
-| `RISKY` | Yellow | Removable but may affect some functionality. Warned before action. |
-| `TELEMETRY` | Red | Data collection and reporting services. |
-| `NEVER_TOUCH` | Muted | System-critical. firestrip will not touch these. Not shown in UI. |
+| Tier | Description |
+|---|---|
+| `SAFE` | Standalone. No system dependencies. Confirmed safe to disable. |
+| `RISKY` | Has inter-dependencies or is OTA-related. Warned before action. |
+| `TELEMETRY` | Data collection, usage reporting, advertising services. |
+| `NEVER_TOUCH` | Hardcoded. Cannot be selected or disabled. Never appears in the UI. |
 
-Debloat presets:
-- `safe` — only `SAFE` tier packages
-- `telemetry` — only `TELEMETRY` tier packages
-- `aggressive` — all of `SAFE` + `RISKY` + `TELEMETRY`
+**Debloat presets:**
 
-All actions use `pm disable-user --user 0` (reversible) rather than hard uninstall wherever possible. Your device will not brick.
+| Preset | Tiers targeted |
+|---|---|
+| `safe` | SAFE only |
+| `telemetry` | TELEMETRY only |
+| `aggressive` | SAFE + RISKY + TELEMETRY |
 
----
+All operations use `pm disable-user --user 0` — the package stays on disk and can be re-enabled at any time. No permanent changes, no brick risk.
 
-## Supported Launchers
-
-| Name | Package | Notes |
-|---|---|---|
-| **Wolf Launcher** | `eu.wolfgangstudios.launcher` | Polished, no ads, TMDB metadata |
-| **FLauncher** | `me.efesser.flauncher` | Open source, minimal, keyboard-friendly |
-| **Sideload Launcher** | `com.riverrock.sideload` | Lightweight, shows all sideloaded apps |
-
-The launcher swap workflow: install the new launcher (or accept a local APK path via `--apk`), set it as the default HOME intent handler, then freeze (not remove) the Amazon launcher. The Amazon launcher is re-enabled automatically if you run `launcher restore`.
-
----
-
-## Supported Devices
-
-| Device | Model Code | Status |
-|---|---|---|
-| **Fire TV Box (4K)** | `AFTBOXE1` | ✅ **Primary reference device — fully tested** |
-| Fire TV Stick (3rd Gen) | `AFTE` | ⚠️ Community tested |
-| Fire TV Stick 4K | `AFTMM` | ⚠️ Community tested |
-| Fire TV Stick 4K Max | `AFTKA` | ⚠️ Community tested |
-| Fire TV Stick Lite | `AFTS` | ⚠️ Community tested |
-| Fire TV Cube (1st Gen) | `AFTR` | ⚠️ Community tested |
-| Fire TV Cube (2nd Gen) | `AFTRS` | ⚠️ Community tested |
-
-> The **Fire TV Box (`AFTBOXE1`, codename `juliana`)** running FireOS `PS7712.5370N` (Android 9, SDK 28, MediaTek m7632) is the primary development and test device. All package lists, telemetry constants, and fixture data are sourced from this real hardware. If you have this exact model, firestrip works out of the box.
-
-> **Fire TV Box users:** firestrip never touches the integrated live TV tuner packages (`com.amazon.tv.channelscan`, `com.amazon.tv.livetv`, `com.amazon.tv.conditionalaccess`, `com.mediatek.tvinput`). These are in the protected `NEVER_TOUCH` list.
-
-Device fingerprinting loads the correct package list per model. Package names and safe/risky classification differ between FireOS versions. Unknown models fall back to the common package list with a warning.
-
----
-
-## Safety Model
-
-firestrip is designed to be **impossible to brick your device with**, assuming you have not already rooted it:
-
-- **Dry-run by default** — nothing happens until you explicitly confirm
-- **Backup first** — a full package snapshot is saved before any destructive action
-- **Disable, don't delete** — `pm disable-user` keeps the package on disk, re-enabling is one command
-- **Locked safe list** — `com.amazon.tv.launcher`, `android`, `com.android.systemui` and other critical packages cannot be selected
-- **Model-aware lists** — package lists are per-device, no guessing across models
-- **Restore command** — re-enable any package from any backup in one step
+**`NEVER_TOUCH` includes** (among others): `com.amazon.tv.launcher`, `android`, `com.android.systemui`, `com.android.providers.downloads` (system download manager), live TV tuner packages on the Fire TV Box.
 
 ---
 
 ## Telemetry Stripped
 
-Beyond package removal, firestrip applies ADB settings-level overrides. On the AFTBOXE1 (and likely all Fire TV devices) these settings are not explicitly stored — Amazon relies on opaque defaults. firestrip writes explicit opt-out values regardless.
+firestrip applies two layers of telemetry suppression:
+
+### Settings layer (7 overrides)
 
 | Setting | Effect |
 |---|---|
-| `global/amazon:device_metrics_opt_in = 0` | Opt out of device metrics reporting |
-| `global/limit_ad_tracking = 1` | Disable advertising tracking identifier |
+| `global/amazon:device_metrics_opt_in = 0` | Opt out of device metrics |
+| `global/limit_ad_tracking = 1` | Disable advertising tracking ID |
 | `global/amazon:interest_based_ads = 0` | Disable interest-based ad profiling |
 | `global/amazon:sidewalk_enabled = 0` | Disable Amazon Sidewalk mesh network |
-| `secure/usage_stats = 0` | Disable usage statistics collection |
+| `secure/usage_stats = 0` | Disable usage statistics |
 | `global/amazon:data_monitoring_consent = 0` | Revoke data monitoring consent |
 | `global/amazon:acr_enabled = 0` | Disable ACR (Automatic Content Recognition) |
+
+### Services layer (20 packages)
+
+Includes: `com.amazon.device.metrics`, `com.amazon.tv.acr`, `com.amazon.hybridadidservice`, `com.amazon.sneakpeek`, `com.amazon.whisperlink.core.android`, `com.amazon.ftvads.deeplinking`, and 14 others.
+
+---
+
+## Launcher Swap
+
+The launcher workflow runs four verified steps:
+
+1. Install the replacement launcher APK (skipped if already installed)
+2. Set it as the default HOME activity via `cmd package set-home-activity`
+3. Verify the HOME activity resolved to the new launcher
+4. Disable the Amazon launcher so it cannot reassert itself
+
+On devices with recent security patches (December 2025+), step 4 will encounter a SecurityException — the Amazon launcher is marked as a protected package. Steps 1–3 still succeed. The warning is shown in both TUI and CLI output.
+
+To undo: `firestrip launcher restore --apply` (or the TUI Restore button) re-enables the Amazon launcher and removes the HOME preference.
+
+**Built-in launcher definitions:**
+
+| Launcher | Package | Type |
+|---|---|---|
+| Wolf Launcher | `eu.wolfgangstudios.launcher` | Polished, TMDB metadata, no ads |
+| FLauncher | `me.efesser.flauncher` | FOSS, minimal, remote-friendly |
+| Sideload Launcher | `com.riverrock.sideload` | Lightweight, shows sideloaded apps |
+
+Any launcher already installed on the device (detected via HOME-intent query) is also listed automatically, tagged `[on device]`.
+
+---
+
+## Backup & Restore
+
+Before any destructive operation, firestrip can snapshot the full device state to a JSON file:
+
+```
+~/.local/share/firestrip/backups/<timestamp>_<model>.json
+```
+
+The backup contains:
+- Full list of all installed packages at time of backup
+- All packages disabled during the session
+- Current values of all telemetry and settings-tweak keys
+- The default launcher package at time of backup
+
+Restore re-enables every package that was disabled and optionally restores the launcher. Supports dry-run preview before applying.
+
+---
+
+## Device Settings Tweaks
+
+The Settings screen applies five quality-of-life overrides:
+
+| Setting | Value | Effect |
+|---|---|---|
+| `system/screen_brightness_mode` | `0` | Manual brightness (disable auto) |
+| `global/transition_animation_scale` | `0.5` | Halve UI transition speed |
+| `global/window_animation_scale` | `0.5` | Halve window animation speed |
+| `global/animator_duration_scale` | `0.5` | Halve animator duration |
+| `global/stay_on_while_plugged_in` | `3` | Keep screen on while charging |
+
+---
+
+## Supported Devices
+
+| Device | Model | Status |
+|---|---|---|
+| **Fire TV Box (4K)** | `AFTBOXE1` | ✅ Primary reference device, fully tested |
+| Fire TV Stick (3rd Gen) | `AFTE` | ⚠️ Profile present, community tested |
+| Fire TV Stick 4K | `AFTMM` | ⚠️ Profile present, community tested |
+| Fire TV Stick 4K Max | `AFTKA` | ⚠️ Profile present, community tested |
+| Fire TV Stick Lite | `AFTS` | ⚠️ Profile present, community tested |
+| Fire TV Stick (2nd Gen) | `AFTT` | ⚠️ Profile present, community tested |
+| Fire TV Cube (1st Gen) | `AFTR` | ⚠️ Profile present, community tested |
+| Fire TV Cube (2nd Gen) | `AFTRS` | ⚠️ Profile present, community tested |
+
+The `AFTBOXE1` (codename `juliana`, MStar M7632, Android 9, FireOS `PS7712.5370N`) is the primary development and test device. All package lists, telemetry constants, and test fixtures are sourced from real hardware. Unknown models fall back to the common package database with a warning.
+
+> **Fire TV Box (`AFTBOXE1`) users:** firestrip never touches the live TV tuner stack (`com.amazon.tv.channelscan`, `com.amazon.tv.livetv`, `com.amazon.tv.conditionalaccess`, `com.mediatek.tvinput`). These are hardcoded in `NEVER_TOUCH`.
+
+---
+
+## Safety Model
+
+firestrip is designed so that normal use cannot brick your device:
+
+- **Dry-run by default** — no action is taken until you pass `--apply` or confirm in the TUI
+- **Confirmation gate** — the TUI shows a full list of planned changes in a modal before executing
+- **Disable, don't uninstall** — `pm disable-user --user 0` keeps the APK on disk; `pm enable --user 0` undoes it instantly
+- **`NEVER_TOUCH` enforcement** — system-critical packages are stripped from all tier lists at load time and cannot be selected under any circumstances
+- **Per-device profiles** — package lists are model-specific; there is no cross-model guessing
+- **Automatic backup** — the TUI backs up state before applying debloat operations
+- **Restore in one step** — any backup can be applied to re-enable everything firestrip disabled
 
 ---
 
 ## MX Linux / Systemdless Notes
 
-firestrip was designed with **MX Linux** (and other systemdless distributions) as a first-class target:
+firestrip treats MX Linux and other non-systemd distributions as first-class:
 
 - Zero `systemd` dependencies anywhere in the codebase
-- Manages `adb start-server` / `adb kill-server` itself via subprocess
-- Reconnects automatically when Fire TV wakes from sleep
-- Distributed as AppImage for maximum portability (no install, no package manager)
-- udev rules provided as a setup helper, no daemon required after
+- ADB server lifecycle managed via subprocess (`adb start-server` / `adb kill-server`)
+- Automatic reconnect when the Fire TV wakes from sleep
+- udev rule helper (`firestrip setup-udev`) writes `/etc/udev/rules.d/51-firestrip-android.rules` and reloads rules — no daemon needed after that
 
 ---
 
 ## Contributing
 
-Contributions are very welcome — especially:
+Contributions are welcome — especially:
 
-- **Package list updates** for new FireOS versions
-- **New device profiles** (Cube, pendant Fire TV)
-- **Launcher integrations**
-- **Testing on non-4K hardware**
+- **Package list updates** for new FireOS versions or devices
+- **New device profiles** (Fire TV Cube 3rd gen, Fire TV pendant)
+- **Launcher entries** in `firestrip/data/launchers/launchers.toml`
+- **Testing on non-Box hardware** with real package lists
 
-See [DESIGN.md](DESIGN.md) for the full architecture and developer reference before contributing.
+See [DESIGN.md](DESIGN.md) for the full architecture, data model, and developer reference.
 
 ---
 
 ## Disclaimer
 
-This tool interacts with your device over ADB using only standard, documented Android commands. It does not exploit any vulnerabilities, does not require root, and does not modify system partitions. Use at your own risk. firestrip is not affiliated with Amazon in any way.
+firestrip uses only standard, documented Android ADB commands. It does not exploit vulnerabilities, does not require root, and does not modify system partitions. All operations are reversible. Use at your own risk. firestrip is not affiliated with Amazon.
 
 ---
 

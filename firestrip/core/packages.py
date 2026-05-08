@@ -65,6 +65,11 @@ NEVER_TOUCH: frozenset[str] = frozenset({
     "com.amazon.tv.livetv",
     "com.mediatek.tvinput",
     "com.mediatek.tvinputservice.arbitratorservice",
+    # Core Android system providers — disabling breaks OS-level downloads/storage
+    "com.android.providers.downloads",
+    "com.android.providers.media",
+    "com.android.providers.contacts",
+    "com.android.providers.calendar",
 })
 
 

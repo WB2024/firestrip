@@ -442,11 +442,6 @@ tier        = "safe"
 description = "Fire TV Recast TV input service"
 
 [[packages]]
-name        = "com.android.providers.downloads"
-tier        = "safe"
-description = "Amazon Download Manager"
-
-[[packages]]
 name        = "com.android.documentsui"
 tier        = "safe"
 description = "Documents UI file picker"
