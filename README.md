@@ -1,5 +1,9 @@
 # firestrip
 
+<p align="center">
+  <img src="Images/Logo.png" alt="firestrip" width="300">
+</p>
+
 **Reclaim your Amazon Fire TV from your Linux terminal.**
 
 firestrip is a Linux-native TUI and CLI tool that removes Amazon's bloatware, silences telemetry, swaps the launcher, and tunes device settings — entirely over ADB, no root required, no Windows in sight.
@@ -24,52 +28,52 @@ Every existing tool to fix this is either Windows-only, macOS-only, an unmaintai
 
 ### Home screen — device connected
 
-<!-- SCREENSHOT: firestrip TUI home screen with a device connected, showing the device model, FireOS version, and Android version in the status cards at the top, with the four quick-action buttons visible below. Capture at full terminal width. -->
-> **`screenshots/home-connected.png`** — _The home screen after connecting to a device. Shows live device info: model name, FireOS build, Android version, and connection status._
+![Home screen — device connected](screenshots/home-connected.png)
+
+_The home screen after connecting to a device. Shows live device info: model name, FireOS build, Android version, and connection status._
 
 ---
 
 ### Debloat screen — packages loaded
 
-<!-- SCREENSHOT: The debloat screen with the package list fully loaded. Tier filter buttons (All / Safe / Risky / Telemetry) visible in the sidebar. Several packages selected (marked with x). Capture before hitting Apply so the list is visible. -->
-> **`screenshots/debloat-packages.png`** — _Package list with tier filter active. Packages are colour-coded by tier (Safe / Risky / Telemetry). Select individually or press `a` to select all visible._
+![Debloat screen — packages loaded](screenshots/debloat-packages.png)
+
+_Package list with tier filter active. Packages are colour-coded by tier (Safe / Risky / Telemetry). Select individually or press `a` to select all visible._
 
 ---
 
 ### Confirm modal — before applying changes
 
-<!-- SCREENSHOT: The confirmation modal dialog open, showing the list of packages about to be disabled with the Disable / Cancel buttons. This is the safety gate that appears before any destructive action. -->
-> **`screenshots/confirm-modal.png`** — _Every destructive action goes through a confirmation modal. The full list of changes is shown before anything executes._
+![Confirm modal — before applying changes](screenshots/confirm-modal.png)
+
+_Every destructive action goes through a confirmation modal. The full list of changes is shown before anything executes._
 
 ---
 
 ### Telemetry screen — current vs target values
 
-<!-- SCREENSHOT: The telemetry screen showing the two-panel layout: the settings DataTable (namespace/key, current value, target value) at the top, and the services list below it showing which telemetry packages are installed vs already absent. -->
-> **`screenshots/telemetry-screen.png`** — _Telemetry settings shown with their current live values and the target firestrip will write. Services list shows installed (✓) vs already removed (·)._
+![Telemetry screen — current vs target values](screenshots/telemetry-screen.png)
+
+_Telemetry settings shown with their current live values and the target firestrip will write. Services list shows installed (✓) vs already removed (·)._
 
 ---
 
 ### Launcher screen — available launchers
 
-<!-- SCREENSHOT: The launcher screen showing the ListView of available launchers (Wolf Launcher, FLauncher, Sideload Launcher, and any device-detected extras tagged [on device]). The current default label at the bottom should show the active launcher package. -->
-> **`screenshots/launcher-screen.png`** — _All HOME-intent handlers found on the device are listed. Pre-defined launchers are shown with FOSS tags where applicable; device-detected extras are tagged [on device]._
+![Launcher screen — available launchers](screenshots/launcher-screen.png)
+
+_All HOME-intent handlers found on the device are listed. Pre-defined launchers are shown with FOSS tags where applicable; device-detected extras appear automatically._
 
 ---
 
 ### Install / Uninstall screen — package table
 
-<!-- SCREENSHOT: The install screen showing the DataTable of installed packages (App name, Package, Type columns). Hide-system-apps checkbox visible. Ideally with a few rows visible to show the sortable columns. -->
-> **`screenshots/install-screen.png`** — _Full package browser with sortable columns. Click any column header to sort. Toggle "Hide system apps" to focus on user-installed packages. Select a row to populate the uninstall field._
+![Install / Uninstall screen — package table](screenshots/install-screen.png)
+
+_Full package browser with sortable columns. Click any column header to sort. Toggle "Hide system apps" to focus on user-installed packages. Select a row to populate the uninstall field._
 
 ---
 
-### CLI — debloat dry-run output
-
-<!-- SCREENSHOT: Terminal output of `firestrip --host 192.168.x.x debloat run --preset safe` (without --apply), showing the dry-run listing of packages that would be disabled, with their tier markers. -->
-> **`screenshots/cli-debloat-dryrun.png`** — _CLI dry-run output. Nothing executes until `--apply` is added. Safe for exploration._
-
----
 
 ## Features
 
