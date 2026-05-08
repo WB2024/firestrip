@@ -720,6 +720,11 @@ tier        = "telemetry"
 description = "Amazon analytics and data event pipeline daemon"
 
 [[packages]]
+name        = "com.amazon.arcus"
+tier        = "risky"
+description = "Amazon push notification / cloud messaging channel — disabling kills Alexa push commands, remote start, and OTA notifications"
+
+[[packages]]
 name        = "com.amazon.tv.acr"
 tier        = "telemetry"
 description = "ACR: identifies and reports content you watch in real-time"
