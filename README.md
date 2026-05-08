@@ -8,6 +8,31 @@
 
 firestrip is a Linux-native TUI and CLI tool that removes Amazon's bloatware, silences telemetry, swaps the launcher, and tunes device settings — entirely over ADB, no root required, no Windows in sight.
 
+<p align="center">
+  <a href="https://buymeacoffee.com/succinctrecords"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow?logo=buy-me-a-coffee"></a>
+</p>
+
+---
+
+## Support This Project
+
+firestrip is built and maintained by **one person**, in free time, with no corporate backing, no funding, and no team. Every device profile, every package classification, every line of the TUI was researched and written from scratch.
+
+If firestrip:
+- saved you from booting Windows just to debloat a stick
+- stopped Amazon from silently fingerprinting your viewing habits
+- gave you a Fire TV that actually works for *you*
+
+— then consider buying a coffee. It takes 30 seconds and means a lot.
+
+<p align="center">
+  <a href="https://buymeacoffee.com/succinctrecords">
+    <img src="https://img.shields.io/badge/☕%20Buy%20Me%20A%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee">
+  </a>
+</p>
+
+Donations directly fund what keeps this project alive: tracking FireOS updates, adding new device profiles, and staying ahead of Amazon's ongoing attempts to lock down ADB access. The tool is free and always will be — but if it's worth a cup of coffee to you, [you know where the button is](https://buymeacoffee.com/succinctrecords).
+
 ---
 
 ## The Problem
@@ -383,7 +408,29 @@ See [DESIGN.md](DESIGN.md) for the full architecture, data model, and developer 
 
 ## Disclaimer
 
-firestrip uses only standard, documented Android ADB commands. It does not exploit vulnerabilities, does not require root, and does not modify system partitions. All operations are reversible. Use at your own risk. firestrip is not affiliated with Amazon.
+firestrip uses only standard, documented Android ADB commands. It does not exploit vulnerabilities, does not require root, and does not modify system partitions. firestrip is not affiliated with Amazon.
+
+---
+
+## Liability Waiver
+
+THIS SOFTWARE IS PROVIDED **"AS IS"**, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. BY DOWNLOADING, INSTALLING, OR USING FIRESTRIP, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THE FOLLOWING TERMS:
+
+1. **No warranty.** The developer makes no representations or warranties of any kind — express, implied, statutory, or otherwise — regarding the software's fitness for a particular purpose, reliability, accuracy, or freedom from defects.
+
+2. **Use at your own risk.** You assume sole and full responsibility for any consequences arising from your use of firestrip, including but not limited to: device malfunction, boot loops, factory resets, loss of functionality, data loss, or voided manufacturer warranties.
+
+3. **Device damage.** The developer is **not responsible** for any damage caused to your Amazon Fire TV or any other hardware as a result of using this software. This includes, without limitation, soft-bricked devices, loss of OTA update capability, or unintended disabling of system components.
+
+4. **No affiliation.** firestrip is an independent open-source project. It is not affiliated with, endorsed by, sponsored by, or in any way associated with Amazon, Amazon.com, Inc., or any of its subsidiaries or affiliates.
+
+5. **User responsibility.** You are solely responsible for understanding the commands being executed on your device. firestrip operates via standard ADB interfaces — the same commands that Android's own developer tooling exposes. You accept that modifying device software carries inherent risk.
+
+6. **Reversibility not guaranteed.** While firestrip is designed to be non-destructive and reversible (`pm disable-user` rather than uninstall), the developer does not guarantee that all operations can be undone in all circumstances, across all FireOS versions, or after Amazon pushes system updates.
+
+7. **Limitation of liability.** To the maximum extent permitted by applicable law, in no event shall the developer be liable for any direct, indirect, incidental, special, exemplary, or consequential damages whatsoever (including but not limited to: procurement of substitute goods or services; loss of use, data, or profits; or business interruption) arising in any way out of the use of or inability to use this software, even if advised of the possibility of such damage.
+
+If you do not accept these terms, do not use firestrip.
 
 ---
 
