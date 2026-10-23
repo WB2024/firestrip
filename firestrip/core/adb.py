@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+import time
 from pathlib import Path
 
 _PKG_RE = re.compile(r"^  Package \[([^\]]+)\]")
@@ -57,12 +58,12 @@ class ADBClient:
 
     def _connect_tcp(self) -> bool:
         target = f"{self._host}:{self._port}"
-        # Fast path: already listed as connected by a running adb server
+        # Reuse USB parsing: only an exact serial in state 'device' is ready.
         try:
             check = subprocess.run(
                 ["adb", "devices"], capture_output=True, text=True, timeout=5
             )
-            if target in (check.stdout or ""):
+            if check.returncode == 0 and target in self._parse_devices(check.stdout or ""):
                 return True
         except (FileNotFoundError, subprocess.TimeoutExpired):
             pass
@@ -77,14 +78,34 @@ class ADBClient:
 
         out = (result.stdout or "") + (result.stderr or "")
         low = out.lower()
-        if "already connected" in low or "connected to" in low:
-            return True
-        if low.strip().startswith("failed") or "cannot connect" in low or "unable" in low:
+        if (result.returncode != 0 or low.strip().startswith("failed")
+                or "cannot connect" in low or "unable" in low):
             raise ADBConnectionError(f"Failed to connect to {self._host}:{self._port}: {out.strip()}")
-        # Empty output typically means success on some adb versions
-        if result.returncode == 0 and not out.strip():
-            return True
-        raise ADBConnectionError(f"Could not connect to {self._host}:{self._port}: {out.strip()}")
+
+        # Connect messages (including empty output) do not prove authorization.
+        # Two 250 ms pauses allow a short state transition; subprocess timeouts
+        # also contribute to total connection time.
+        for attempt in range(3):
+            if attempt:
+                time.sleep(0.25)
+            try:
+                check = subprocess.run(
+                    ["adb", "devices"], capture_output=True, text=True, timeout=5
+                )
+            except FileNotFoundError as exc:
+                raise ADBBinaryNotFoundError(_ADB_NOT_FOUND_MSG) from exc
+            except subprocess.TimeoutExpired as exc:
+                raise ADBTimeoutError("adb devices verification timed out") from exc
+            if check.returncode != 0:
+                raise ADBConnectionError(f"adb devices verification failed for {target}")
+            if target in self._parse_devices(check.stdout or ""):
+                return True
+        raise ADBConnectionError(
+            f"ADB device {target} is not ready: it may be disconnected, offline, "
+            "awaiting authorization, or absent from the device list. "
+            "If an ADB authorization prompt appears, accept it and retry; "
+            "otherwise check the connection and retry."
+        )
 
     def _connect_usb(self) -> bool:
         try:

@@ -39,7 +39,11 @@ def test_pm_list_packages_parses() -> None:
 
 def test_connect_tcp_success() -> None:
     client = ADBClient(host="192.168.1.138")
-    with patch("subprocess.run", return_value=_completed(stdout="connected to 192.168.1.138:5555")):
+    with patch("subprocess.run", side_effect=[
+        _completed(stdout="List of devices attached\n"),
+        _completed(stdout="connected to 192.168.1.138:5555"),
+        _completed(stdout="List of devices attached\n192.168.1.138:5555\tdevice\n"),
+    ]):
         assert client.connect() is True
 
 
